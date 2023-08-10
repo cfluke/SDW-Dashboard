@@ -36,8 +36,9 @@ namespace FileExplorer
             file.SetName(Path.GetFileName(directory));
             file.SetIcon(fileComponentType);
 
-            // enable and borrow
+            // enable and put to bottom of hierarchy (to avoid sorting issues)
             fileObject.SetActive(true);
+            fileObject.transform.SetAsLastSibling();
             return file;
         }
 
