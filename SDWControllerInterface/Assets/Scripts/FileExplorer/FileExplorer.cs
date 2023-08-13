@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -7,106 +8,145 @@ namespace FileExplorer
 {
     public class FileExplorer : MonoBehaviour
     {
-        // default root directory
         private string _currentDirectory = "/";
+        private string _selectedFile = string.Empty;
+        private string _extension = string.Empty;
+        private string[] _folders;
+        private string[] _files;
         
         // undo/redo
         private Stack<string> _backwardHistory;
         private Stack<string> _forwardHistory;
-
-        private FileExplorerViewport _fileExplorerViewport;
-        private FileExplorerAddressBar _fileExplorerAddressBar;
-
-        void Start()
+        
+        // components/subsections of the file explorer to manage
+        [SerializeField] private FileExplorerNavbar navbar;
+        [SerializeField] private FileExplorerSidebar sidebar;
+        [SerializeField] private FileExplorerViewport viewport;
+        [SerializeField] private FileExplorerFooter footer;
+        
+        // callback functions
+        private Action<string> _onConfirm;
+        
+        public void Init(Action<string> onConfirm, FileExplorerDialogType dialogType, string directory, string extension)
         {
             _backwardHistory = new Stack<string>();
             _forwardHistory = new Stack<string>();
-            
-            // TODO: cache these better
-            _fileExplorerViewport = FindObjectOfType<FileExplorerViewport>();
-            _fileExplorerAddressBar = FindObjectOfType<FileExplorerAddressBar>();
-        }
 
-        public void Refresh()
+            _onConfirm = onConfirm;
+            _extension = extension;
+
+            navbar.Init(OnNavButton);
+            viewport.Init(OnFolder, OnFile);
+            footer.Init(dialogType, extension, OnInputFieldUpdate);
+
+            UpdateDirectory(directory);
+        }
+        
+        private bool UpdateDirectory(string directory)
         {
-            UpdateCurrentDirectory(_currentDirectory);
+            try
+            {
+                // these function calls can result in UnauthorizedAccessExceptions
+                _folders = Directory.GetDirectories(directory);
+                _files = Directory.GetFiles(directory, _extension);
+            
+                _currentDirectory = directory;
+                _selectedFile = string.Empty;
+
+                // update GUI
+                navbar.Rebuild(_currentDirectory);
+                viewport.Rebuild(_folders, _files);
+                footer.Rebuild();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                footer.SetErrorMessage("Permission Denied");
+                return false;
+            }
+            return true;
         }
 
-        public void Back()
+        #region navbar functions
+        
+        public void OnRefresh()
+        {
+            UpdateDirectory(_currentDirectory);
+        }
+
+        public void OnBack()
         {
             if (_backwardHistory.Count == 0) 
                 return; // no undo history
             
             // perform undo
             _forwardHistory.Push(_currentDirectory);
-            UpdateCurrentDirectory(_backwardHistory.Pop());
+            UpdateDirectory(_backwardHistory.Pop());
         }
 
-        public void Forward()
+        public void OnForward()
         {
             if (_forwardHistory.Count == 0) 
                 return; // no redo history
             
             // perform redo
             _backwardHistory.Push(_currentDirectory);
-            UpdateCurrentDirectory(_forwardHistory.Pop());
+            UpdateDirectory(_forwardHistory.Pop());
         }
 
-        private void UpdateCurrentDirectory(string directory)
+        private void OnNavButton(string directory)
         {
-            _currentDirectory = directory;
+            // keep performing back/undo until desired directory is reached
+            string prevDirectory = _currentDirectory;
+            while (prevDirectory != directory)
+            {
+                _forwardHistory.Push(prevDirectory);
+                prevDirectory = _backwardHistory.Pop();
+            }
             
-            // update GUI
-            RefreshAddressBar();
-            RefreshFileList();
+            UpdateDirectory(prevDirectory);
         }
 
-        private void RefreshAddressBar()
+        #endregion
+
+        #region viewport functions
+
+        private void OnFolder(string directory)
         {
-            string[] pathSplit = _currentDirectory.Split(Path.DirectorySeparatorChar);
-            _fileExplorerAddressBar.RefreshAddressBar(pathSplit, OnAddressButtonClick);
+            string currentDirectory = _currentDirectory;
+            if (UpdateDirectory(directory))
+            {
+                // no more redo, append undo history
+                _forwardHistory.Clear();
+                _backwardHistory.Push(currentDirectory);
+            }
         }
+
+        private void OnFile(string filename)
+        {
+            _selectedFile = filename;
+            footer.SetFileName(filename);
+        }
+
+        #endregion
+
+        #region sidebar functions
+
         
-        private void RefreshFileList()
-        {
-            _fileExplorerViewport.ClearViewport();
 
-            // get files and folders and populate the viewport
-            string[] folders = Directory.GetDirectories(_currentDirectory);
-            string[] files = Directory.GetFiles(_currentDirectory);
-            _fileExplorerViewport.PopulateFolders(folders, OnFolderClick);
-            _fileExplorerViewport.PopulateFiles(files, OnFileClick);
+        #endregion
+
+        #region footer functions
+        
+        public void OnConfirm()
+        {
+            _onConfirm.Invoke(_currentDirectory);
         }
 
-        private void OnAddressButtonClick(string directory)
+        private void OnInputFieldUpdate(string value)
         {
-            int index = 1;
-            foreach (string historyPath in _backwardHistory)
-            {
-                if (historyPath == directory)
-                    break;
-                index++;
-            }
-
-            for (int i = 0; i < _backwardHistory.Count - index; i++)
-            {
-                _forwardHistory.Push(_currentDirectory);
-                _currentDirectory = _backwardHistory.Pop();
-            }
-            UpdateCurrentDirectory(_currentDirectory);
+            _selectedFile = value;
         }
 
-        private void OnFolderClick(string directory)
-        {
-            // no more redo, append undo history
-            _forwardHistory.Clear();
-            _backwardHistory.Push(_currentDirectory);
-            UpdateCurrentDirectory(directory);
-        }
-
-        private void OnFileClick(string directory)
-        {
-            
-        }
+        #endregion
     }
 }

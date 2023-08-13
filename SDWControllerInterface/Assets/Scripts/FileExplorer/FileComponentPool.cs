@@ -9,17 +9,18 @@ namespace FileExplorer
 {
     public class FileComponentPool : MonoBehaviour
     {
+        [SerializeField] private RectTransform contentRoot;
         [SerializeField] private GameObject filePrefab;
         [SerializeField] private int poolSize;
         private Queue<GameObject> _objectPool;
 
-        void Start()
+        public void Init()
         {
             _objectPool = new Queue<GameObject>();
 
             for (int i = 0; i < poolSize; i++)
             {
-                GameObject file = Instantiate(filePrefab, transform);
+                GameObject file = Instantiate(filePrefab, contentRoot);
                 file.SetActive(false);
                 _objectPool.Enqueue(file);
             }
