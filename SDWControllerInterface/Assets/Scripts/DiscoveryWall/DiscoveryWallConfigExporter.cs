@@ -1,5 +1,4 @@
 using UnityEngine;
-using SFB;
 using System.IO;
 
 namespace DiscoveryWall
@@ -13,7 +12,7 @@ namespace DiscoveryWall
         public bool Export(DiscoveryWallConfig config)
         {
             // use the StandaloneFileBrowser tool to open a native file browser
-            string filePath = StandaloneFileBrowser.SaveFilePanel("Export Discovery Wall Config", "", "", "config");
+            string filePath = null; // = StandaloneFileBrowser.SaveFilePanel("Export Discovery Wall Config", "", "", "config");
             if (filePath.Length == 0)
                 return false;
             

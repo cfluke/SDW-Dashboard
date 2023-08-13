@@ -1,5 +1,4 @@
 using UnityEngine;
-using SFB;
 
 namespace AppManagement
 {
@@ -15,7 +14,7 @@ namespace AppManagement
         public void ImportApp()
         {
             // use the StandaloneFileBrowser tool to open a native file browser
-            string[] filePath = StandaloneFileBrowser.OpenFilePanel("Import Application", "", "", false);
+            string[] filePath = null; // = StandaloneFileBrowser.OpenFilePanel("Import Application", "", "", false);
             
             // if user selected something, add it to app bar
             if (filePath.Length > 0)

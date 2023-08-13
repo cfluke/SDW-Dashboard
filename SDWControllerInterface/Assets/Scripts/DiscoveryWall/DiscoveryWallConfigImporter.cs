@@ -1,6 +1,5 @@
 using System.IO;
 using UnityEngine;
-using SFB;
 
 namespace DiscoveryWall
 {
@@ -13,7 +12,7 @@ namespace DiscoveryWall
         public DiscoveryWallConfig Import()
         {
             // use the StandaloneFileBrowser tool to open a native file browser
-            string[] filePath = StandaloneFileBrowser.OpenFilePanel("Import Discovery Wall Config", "", "config", false);
+            string[] filePath = null; // = StandaloneFileBrowser.OpenFilePanel("Import Discovery Wall Config", "", "config", false);
             if (filePath.Length == 0)
                 return null;
 
