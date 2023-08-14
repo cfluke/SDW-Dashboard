@@ -144,11 +144,14 @@ namespace FileExplorer
             _selectedFile = value;
         }
 
-        public void Confirm()
+        public async void Confirm()
         {
-            OnConfirm.Invoke(_selectedFile);
+            DialogManager dialogManager = FindObjectOfType<DialogManager>();
+            bool confirm = await dialogManager.OpenConfirmDialog<bool, ConfirmDialogArgs>(null);
+            
+            if (confirm) 
+                OnConfirm.Invoke(_selectedFile);
         }
-
         public void Cancel()
         {
             OnConfirm.Invoke(null);

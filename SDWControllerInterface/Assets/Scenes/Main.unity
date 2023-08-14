@@ -497,7 +497,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1604461789}
-        m_TargetAssemblyTypeName: FileExplorer.FileExplorerDialog, Assembly-CSharp
+        m_TargetAssemblyTypeName: DiscoveryWall.DiscoveryWallConfigFileExplorer,
+          Assembly-CSharp
         m_MethodName: OpenDialog
         m_Mode: 1
         m_Arguments:
@@ -2243,7 +2244,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1604461789}
-        m_TargetAssemblyTypeName: FileExplorer.FileExplorerDialog, Assembly-CSharp
+        m_TargetAssemblyTypeName: DiscoveryWall.DiscoveryWallConfigFileExplorer,
+          Assembly-CSharp
         m_MethodName: SaveDialog
         m_Mode: 1
         m_Arguments:
@@ -4669,6 +4671,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogsRoot: {fileID: 1604461787}
   fileExplorerDialogPrefab: {fileID: 4741317428908843503, guid: 619e6203b70c77f49946bfcb4c7d7251, type: 3}
+  confirmDialogPrefab: {fileID: 4310382147172066174, guid: 834e46009cab28f42af6ec9dd14ddcfa, type: 3}
 --- !u!114 &1604461789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4678,7 +4681,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1604461786}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8f0981e6eebf7874bb07b2a67937db8b, type: 3}
+  m_Script: {fileID: 11500000, guid: 519a62c05029f8b45ae79cf80cb8cf7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   dialogManager: {fileID: 1604461788}

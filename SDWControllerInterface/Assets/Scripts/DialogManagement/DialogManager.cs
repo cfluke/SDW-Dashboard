@@ -8,6 +8,7 @@ namespace DialogManagement
     {
         [SerializeField] private RectTransform dialogsRoot;
         [SerializeField] private GameObject fileExplorerDialogPrefab;
+        [SerializeField] private GameObject confirmDialogPrefab;
 
         public async Task<T> Open<T, TParams>(GameObject dialogPrefab, TParams parameters) where TParams : class
         {
@@ -30,6 +31,11 @@ namespace DialogManagement
         public async Task<T> OpenFileDialog<T, TParams>(TParams parameters) where TParams : class
         {
             return await Open<T, TParams>(fileExplorerDialogPrefab, parameters);
+        }
+        
+        public async Task<T> OpenConfirmDialog<T, TParams>(TParams parameters) where TParams : class
+        {
+            return await Open<T, TParams>(confirmDialogPrefab, parameters);
         }
     }
 }
