@@ -1,4 +1,5 @@
 using System.IO;
+using SerializableData;
 using UnityEngine;
 
 namespace DiscoveryWall
@@ -9,7 +10,7 @@ namespace DiscoveryWall
         /// opens a file picker window to allow the user to select and import a file to set the SDW configuration
         /// </summary>
         /// <returns>a DiscoveryWallConfig object, otherwise null</returns>
-        public DiscoveryWallConfig Import()
+        public DiscoveryWallSerializable Import(string path)
         {
             // use the StandaloneFileBrowser tool to open a native file browser
             string[] filePath = null; // = StandaloneFileBrowser.OpenFilePanel("Import Discovery Wall Config", "", "config", false);
@@ -20,7 +21,7 @@ namespace DiscoveryWall
             string json = File.ReadAllText(filePath[0]);
 
             // deserialize the config from json to DiscoveryWallConfig object
-            return JsonUtility.FromJson<DiscoveryWallConfig>(json);
+            return JsonUtility.FromJson<DiscoveryWallSerializable>(json);
         }
     }
 }

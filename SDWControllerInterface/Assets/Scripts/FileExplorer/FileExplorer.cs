@@ -147,6 +147,19 @@ namespace FileExplorer
             _selectedFile = value;
         }
 
+        public async void Confirm()
+        {
+            DialogManager dialogManager = FindObjectOfType<DialogManager>();
+            bool confirm = await dialogManager.OpenConfirmDialog<bool, ConfirmDialogArgs>(null);
+            
+            if (confirm) 
+                OnConfirm.Invoke(Path.Combine(_currentDirectory, _selectedFile));
+        }
+        public void Cancel()
+        {
+            OnConfirm.Invoke(null);
+        }
+        
         #endregion
     }
 }

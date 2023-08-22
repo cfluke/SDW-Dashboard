@@ -12,14 +12,11 @@ namespace AppManagement
     {
         [SerializeField] private TMP_Text appTitle;
         
-        public App App { get; private set; }
-        [CanBeNull] private Monitor _monitor;
-        [CanBeNull] private Monitor _prevMonitor;
+        //public App App { get; private set; }
 
-        public void InitAppDraggable(App app)
+        public void InitAppDraggable()
         {
-            App = app;
-            appTitle.text = App.appName;
+            //App = app;
         }
 
         public void OnDrag(PointerEventData eventData)
@@ -29,31 +26,7 @@ namespace AppManagement
 
         public void OnEndDrag(PointerEventData eventData)
         {
-            // free previous monitor if there was one
-            if (_prevMonitor)
-                _prevMonitor.SetApp(null);
             
-            // on drop, we're either on a monitor or the draggable can be deleted/re-used
-            if (!_monitor)
-            {
-                // delete/re-use
-                Debug.Log("Delete this AppDraggable");
-                return;
-            }
-            
-            // assign and snap to monitor
-            _prevMonitor = _monitor;
-            _monitor.SetApp(this);
-        }
-
-        public void OnMonitorEnter(Monitor monitor)
-        {
-            _monitor = monitor;
-        }
-
-        public void OnMonitorExit()
-        {
-            _monitor = null;
         }
     }
 }
