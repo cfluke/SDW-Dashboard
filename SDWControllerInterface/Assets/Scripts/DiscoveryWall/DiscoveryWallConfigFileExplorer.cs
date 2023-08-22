@@ -1,5 +1,8 @@
+using System.Threading.Tasks;
 using DialogManagement;
 using FileExplorer;
+using SerializableData;
+using UnityEditor.VersionControl;
 using UnityEngine;
 
 namespace DiscoveryWall
@@ -7,18 +10,32 @@ namespace DiscoveryWall
     public class DiscoveryWallConfigFileExplorer : MonoBehaviour
     {
         [SerializeField] private DialogManager dialogManager;
+        private DiscoveryWall _discoveryWall;
 
-        public void SaveDialog()
+        private string path;
+
+        public async void SaveDialog()
         {
-            Open(FileExplorerDialogType.Save);
+            path = await Open(FileExplorerDialogType.Save);
+            
+            _discoveryWall = FindObjectOfType<DiscoveryWall>();
+            DiscoveryWallConfigExporter sdwExporter = new DiscoveryWallConfigExporter();
+            sdwExporter.Export(_discoveryWall.GetSerializable(), path);
         }
 
-        public void OpenDialog()
+        public async void OpenDialog()
         {
-            Open(FileExplorerDialogType.Open);
+            // get path
+            path = await Open(FileExplorerDialogType.Open);
+            
+            _discoveryWall = FindObjectOfType<DiscoveryWall>();
+            DiscoveryWallConfigImporter sdwImporter = new DiscoveryWallConfigImporter(); 
+            DiscoveryWallSerializable discoveryWallData = sdwImporter.Import(path);
+            _discoveryWall.Clear();
+            _discoveryWall.Set(discoveryWallData);
         }
 
-        private async void Open(FileExplorerDialogType dialogType)
+        private async Task<string> Open(FileExplorerDialogType dialogType)
         {
             FileExplorerArgs args = new FileExplorerArgs
             {
@@ -27,8 +44,7 @@ namespace DiscoveryWall
                 Extension = "*.sdw"
             };
             
-            string path = await dialogManager.OpenFileDialog<string, FileExplorerArgs>(args);
-            Debug.Log(path);
+            return await dialogManager.OpenFileDialog<string, FileExplorerArgs>(args);
         }
     }
 }

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5625264889758364462}
   - component: {fileID: 5088773470984448539}
-  - component: {fileID: 6991864347276822488}
+  - component: {fileID: 8133029437129089614}
   m_Layer: 5
   m_Name: 1-1-1
   m_TagString: Untagged
@@ -67,7 +67,7 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &6991864347276822488
+--- !u!114 &8133029437129089614
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -76,7 +76,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2169389787828030345}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd6031a04954c1e4da41019081a96647, type: 3}
+  m_Script: {fileID: 11500000, guid: 5df5172bc4dc1b14fb2df39c461a8bc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &297458040126901465
@@ -86,6 +86,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5625264889758364462}
     m_Modifications:
+    - target: {fileID: 249480072204845421, guid: 88bebb33f9d7a5d4f859b360ab05bcf4, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.000030517578
+      objectReference: {fileID: 0}
+    - target: {fileID: 3337088824327119916, guid: 88bebb33f9d7a5d4f859b360ab05bcf4, type: 3}
+      propertyPath: x
+      value: 0.333
+      objectReference: {fileID: 0}
+    - target: {fileID: 3337088824327119916, guid: 88bebb33f9d7a5d4f859b360ab05bcf4, type: 3}
+      propertyPath: y
+      value: 0.333
+      objectReference: {fileID: 0}
+    - target: {fileID: 3337088824327119916, guid: 88bebb33f9d7a5d4f859b360ab05bcf4, type: 3}
+      propertyPath: width
+      value: 0.333
+      objectReference: {fileID: 0}
+    - target: {fileID: 3337088824327119916, guid: 88bebb33f9d7a5d4f859b360ab05bcf4, type: 3}
+      propertyPath: height
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5971089977924590211, guid: 88bebb33f9d7a5d4f859b360ab05bcf4, type: 3}
       propertyPath: m_Name
       value: AppButton
@@ -188,6 +208,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5625264889758364462}
     m_Modifications:
+    - target: {fileID: 249480072204845421, guid: 88bebb33f9d7a5d4f859b360ab05bcf4, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.000030517578
+      objectReference: {fileID: 0}
+    - target: {fileID: 3337088824327119916, guid: 88bebb33f9d7a5d4f859b360ab05bcf4, type: 3}
+      propertyPath: x
+      value: 0.666
+      objectReference: {fileID: 0}
+    - target: {fileID: 3337088824327119916, guid: 88bebb33f9d7a5d4f859b360ab05bcf4, type: 3}
+      propertyPath: y
+      value: 0.666
+      objectReference: {fileID: 0}
+    - target: {fileID: 3337088824327119916, guid: 88bebb33f9d7a5d4f859b360ab05bcf4, type: 3}
+      propertyPath: width
+      value: 0.333
+      objectReference: {fileID: 0}
+    - target: {fileID: 3337088824327119916, guid: 88bebb33f9d7a5d4f859b360ab05bcf4, type: 3}
+      propertyPath: height
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5971089977924590211, guid: 88bebb33f9d7a5d4f859b360ab05bcf4, type: 3}
       propertyPath: m_Name
       value: AppButton
@@ -290,6 +330,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5625264889758364462}
     m_Modifications:
+    - target: {fileID: 249480072204845421, guid: 88bebb33f9d7a5d4f859b360ab05bcf4, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.000030517578
+      objectReference: {fileID: 0}
+    - target: {fileID: 3337088824327119916, guid: 88bebb33f9d7a5d4f859b360ab05bcf4, type: 3}
+      propertyPath: width
+      value: 0.333
+      objectReference: {fileID: 0}
+    - target: {fileID: 3337088824327119916, guid: 88bebb33f9d7a5d4f859b360ab05bcf4, type: 3}
+      propertyPath: height
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5971089977924590211, guid: 88bebb33f9d7a5d4f859b360ab05bcf4, type: 3}
       propertyPath: m_Name
       value: AppButton

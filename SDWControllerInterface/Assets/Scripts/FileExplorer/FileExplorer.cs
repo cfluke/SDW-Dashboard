@@ -150,7 +150,7 @@ namespace FileExplorer
             bool confirm = await dialogManager.OpenConfirmDialog<bool, ConfirmDialogArgs>(null);
             
             if (confirm) 
-                OnConfirm.Invoke(_selectedFile);
+                OnConfirm.Invoke(Path.Combine(_currentDirectory, _selectedFile));
         }
         public void Cancel()
         {
