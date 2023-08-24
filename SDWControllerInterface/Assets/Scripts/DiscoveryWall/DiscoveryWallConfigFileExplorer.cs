@@ -2,7 +2,6 @@ using System.Threading.Tasks;
 using DialogManagement;
 using FileExplorer;
 using SerializableData;
-using UnityEditor.VersionControl;
 using UnityEngine;
 
 namespace DiscoveryWall
