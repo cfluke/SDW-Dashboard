@@ -12,7 +12,7 @@ public class TimeManager : MonoBehaviour
     public TextMeshProUGUI txtTime;
     private const string API_URL = "https://timeapi.io/api/Time/current/coordinate?latitude=-37.82&longitude=145.04";
     private string dtFormat = "dd/MM/yyyy HH:mm:ss.f";
-    private string tFormat = @"hh\:mm\:ss\.f";
+    //private string tFormat = @"hh\:mm\:ss\.f";
     private DateTime gregTime = DateTime.MinValue;
     private float callOffset = 0f;
     private const float LONGITUDE = 145.04f;
