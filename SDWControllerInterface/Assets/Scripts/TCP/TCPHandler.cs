@@ -79,6 +79,7 @@ public sealed class TCPHandler {
 	}
 
 	// Handles a new client joining
+	#nullable enable
 	private void HandleClient(object clientObject) {
 		TcpClient client = (TcpClient)clientObject;
 		string? clientID = null;
@@ -133,6 +134,7 @@ public sealed class TCPHandler {
 			clients.Remove(clientID);
 		}
 	}
+	#nullable disable
 
 	// When a new client joins, make a new thread to handle its messages
 	private void Listen() {
@@ -145,6 +147,7 @@ public sealed class TCPHandler {
 
 	public static event EventHandler<TCPMessageReceivedEventArgs> MessageReceived;
 
+	#nullable enable
 	private void OnMessageReceived(string? clientID, ClientToServerMessage message, TcpClient client) {
 		// Artificially handle indentification messages here before anywhere else
 		if (message.MessageType == MessageTypes.Identify) {
@@ -169,6 +172,7 @@ public sealed class TCPHandler {
 		Debug.Log("Message received\n\tType; " + e.message.MessageType + "\n\tContents; " + e.message.payload + "\n");
 		MessageReceived?.Invoke(this, e);
 	}
+	#nullable disable
 
 }
 
