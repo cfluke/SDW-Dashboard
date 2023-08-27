@@ -92,7 +92,7 @@ public sealed class TCPHandler {
 		// SendMessage is not used here, as it requires the client to have already been identified
 		// Request the client identifies itself
 		SendMessageUnsafe(ns, new ServerToClientMessage {
-			messageType = MessageTypes.RequestIdentify,
+			MessageType = MessageTypes.RequestIdentify,
 			payload = "",
 		});
 
@@ -120,7 +120,7 @@ public sealed class TCPHandler {
 
 		// Artificially creates the disconnect message
 		string disconnectMessage = JsonUtility.ToJson(new ClientToServerMessage {
-			messageType = MessageTypes.Disconnect,
+			MessageType = MessageTypes.Disconnect,
 			payload = "",
 		});
 
@@ -147,7 +147,7 @@ public sealed class TCPHandler {
 
 	private void OnMessageReceived(string? clientID, ClientToServerMessage message, TcpClient client) {
 		// Artificially handle indentification messages here before anywhere else
-		if (message.messageType == MessageTypes.Identify) {
+		if (message.MessageType == MessageTypes.Identify) {
 			lock (clientDictionaryLock) {
 				// TODO: prevent attempting to add ID that is already taken
 				clients.Add(message.payload, client);
@@ -166,7 +166,7 @@ public sealed class TCPHandler {
 		// Create the message event, then fire the event
 		TCPMessageReceivedEventArgs e = new TCPMessageReceivedEventArgs(clientID, message);
 
-		Debug.Log("Message received\n\tType; " + e.message.messageType + "\n\tContents; " + e.message.payload + "\n");
+		Debug.Log("Message received\n\tType; " + e.message.MessageType + "\n\tContents; " + e.message.payload + "\n");
 		MessageReceived?.Invoke(this, e);
 	}
 
@@ -184,13 +184,41 @@ public enum MessageTypes {
 // Shouldn't actually need two different message types; but it's here just in case
 [Serializable]
 public struct ServerToClientMessage {
-	public MessageTypes messageType;
+	public MessageTypes MessageType {
+		get {
+			MessageTypes ret;
+			if (Enum.TryParse<MessageTypes>(messageType, out ret)) {
+				return ret;
+			}
+			throw new Exception("Attempted to parse a Message Type that does not exist");
+		}
+		set {
+			messageType = value.ToString();
+		}
+	}
+	[SerializeField]
+	private string messageType;
+	[SerializeField]
 	public string payload;
 }
 
 [Serializable]
 public struct ClientToServerMessage {
-	public MessageTypes messageType;
+	public MessageTypes MessageType {
+		get {
+			MessageTypes ret;
+			if (Enum.TryParse<MessageTypes>(messageType, out ret)) {
+				return ret;
+			}
+			throw new Exception("Attempted to parse a Message Type that does not exist");
+		}
+		set {
+			messageType = value.ToString();
+		}
+	}
+	[SerializeField]
+	private string messageType;
+	[SerializeField]
 	public string payload;
 }
 
