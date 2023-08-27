@@ -176,7 +176,6 @@ public sealed class TCPHandler {
 
 }
 
-// TODO: Make these strings
 public enum MessageTypes {
 	Identify,
 	Disconnect,
