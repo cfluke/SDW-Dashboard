@@ -147,7 +147,7 @@ GameObject:
   - component: {fileID: 1296804194163184729}
   - component: {fileID: 1296804194163184734}
   - component: {fileID: 1296804194163184735}
-  - component: {fileID: 1296804194163184732}
+  - component: {fileID: 8389569841746246225}
   m_Layer: 5
   m_Name: Navbar
   m_TagString: Untagged
@@ -241,7 +241,7 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &1296804194163184732
+--- !u!114 &8389569841746246225
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -250,10 +250,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1296804194163184722}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 94568cb82e815654fbcb8b7d8f0413f6, type: 3}
+  m_Script: {fileID: 11500000, guid: 323b16f29540e6146ac22c0ff32338e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialog: {fileID: 1296804195314581852}
+  widgetContainer: {fileID: 1296804195314581852}
 --- !u!1 &1296804194990777983
 GameObject:
   m_ObjectHideFlags: 0
@@ -422,6 +422,7 @@ GameObject:
   - component: {fileID: 1296804195314581854}
   - component: {fileID: 1296804195314581855}
   - component: {fileID: 3656812171036465018}
+  - component: {fileID: 3431798289317523446}
   m_Layer: 5
   m_Name: WidgetContainer
   m_TagString: Untagged
@@ -516,6 +517,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1f09b94f0e9f434aa059fc98ea1c194, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3431798289317523446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1296804195314581853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: -1
+  m_MinHeight: -1
+  m_PreferredWidth: -1
+  m_PreferredHeight: -1
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1 &5977256937544534946
 GameObject:
   m_ObjectHideFlags: 0
