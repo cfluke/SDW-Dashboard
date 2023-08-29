@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 
 namespace SerializableData
 {
@@ -11,7 +12,7 @@ namespace SerializableData
 
         public AppSerializable(string filePath, int xVal, int yVal, int width, int height)
         {
-            path = filePath;
+            path = filePath.Replace("\\", "/");
             x = xVal;
             y = yVal;
             w = width;

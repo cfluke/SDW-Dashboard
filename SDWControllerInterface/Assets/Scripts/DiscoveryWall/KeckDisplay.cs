@@ -8,20 +8,47 @@ namespace DiscoveryWall
     public class KeckDisplay : MonoBehaviour
     {
         [SerializeField] private Monitor[] monitors;
-
+        [SerializeField] private string id;
+        
         public void StartApps()
         {
-            KeckDisplaySerializable keckDisplaySerializable = GetSerializable();
+            
             foreach (Monitor monitor in monitors)
             {
                 AppSerializable[] apps = monitor.GetSerializableApps();
 
                 foreach (AppSerializable app in apps)
                 {
-                    // serialize config object to json
+                    if (app == null)
+                        continue;
+                    
+                    // serialize app object to json
                     string json = JsonUtility.ToJson(app);
-                    Debug.Log(json);
+                    
+                    // create TCP message
+                    ServerToClientMessage message = new ServerToClientMessage
+                    {
+                        payload = json,
+                        messageType = MessageTypes.Echo // <- change to "AppStart" or something?
+                    };
+                    
+                    // send
+                    Debug.Log("Attempting to send " + json + " to " + id);
+                    if (!TCPHandler.SendMessage(id, message))
+                    {
+                        Debug.Log("Client doesn't exist!");
+                    }
                 }
+            }
+        }
+
+        public void Populate(KeckDisplaySerializable keckDisplayData)
+        {
+            for (int i = 0; i < monitors.Length; i++)
+            {
+                Monitor monitor = monitors[i];
+                MonitorSerializable monitorData = keckDisplayData.monitors[i];
+                monitor.Populate(monitorData);
             }
         }
         
@@ -37,11 +64,6 @@ namespace DiscoveryWall
             foreach (Monitor monitor in monitors)
                 m.Add(monitor.GetSerializable());
             return new KeckDisplaySerializable(m);
-        }
-
-        public Monitor[] GetMonitors()
-        {
-            return monitors;
         }
     }
 }

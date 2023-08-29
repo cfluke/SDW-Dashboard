@@ -8,38 +8,33 @@ namespace DiscoveryWall
     {
         [SerializeField] private KeckDisplay[] keckDisplays;
 
+        public void Populate(DiscoveryWallSerializable discoveryWallData)
+        {
+            // TODO: dynamic instantiation of KeckDisplays
+            // the following function assumes the KeckDisplay[] array is populated from the inspector
+            // however, if we make it so clients can communicate their existence, then we could make them communicate their KeckDisplay info too
+            // then, using that KeckDisplay info, we dynamically instantiate KeckDisplay prefabs, making the UI more robust
+            // however, this also means more moving parts, such as network comms and config files
+
+            for (int i = 0; i < keckDisplays.Length; i++)
+            {
+                KeckDisplay keckDisplay = keckDisplays[i];
+                KeckDisplaySerializable keckDisplayData = discoveryWallData.keckDisplays[i];
+                keckDisplay.Populate(keckDisplayData);
+            }
+        }
+        
         public void Clear()
         {
             foreach (KeckDisplay keckDisplay in keckDisplays)
                 keckDisplay.Clear();
         }
 
-        public void Set(DiscoveryWallSerializable discoveryWallData)
-        {
-            for (int i = 0; i < discoveryWallData.keckDisplays.Length; i++)
-            {
-                var keckDisplay = keckDisplays[i];
-                var keckDisplayData = discoveryWallData.keckDisplays[i];
-                for (int j = 0; j < keckDisplayData.monitors.Length; j++)
-                {
-                    var monitor = keckDisplay.GetMonitors()[j];
-                    var monitorData = keckDisplayData.monitors[j];
-                    for (int k = 0; k < monitorData.apps.Length; k++)
-                    {
-                        var appData = monitorData.apps[k];
-                        monitor.AddApp(appData.path, appData.x, appData.y, appData.w, appData.h);
-                    }
-                }
-            }
-        }
-
         public DiscoveryWallSerializable GetSerializable()
         {
             List<KeckDisplaySerializable> k = new List<KeckDisplaySerializable>();
             foreach (KeckDisplay keckDisplay in keckDisplays)
-            {
                 k.Add(keckDisplay.GetSerializable());
-            }
             return new DiscoveryWallSerializable(k);
         }
     }

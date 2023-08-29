@@ -143,6 +143,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5df5172bc4dc1b14fb2df39c461a8bc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layoutType: 5
 --- !u!1 &7628751504195828709
 GameObject:
   m_ObjectHideFlags: 0
@@ -234,6 +235,10 @@ PrefabInstance:
     - target: {fileID: 3337088824327119916, guid: 88bebb33f9d7a5d4f859b360ab05bcf4, type: 3}
       propertyPath: height
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3337088824327119916, guid: 88bebb33f9d7a5d4f859b360ab05bcf4, type: 3}
+      propertyPath: buttonId
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5971089977924590211, guid: 88bebb33f9d7a5d4f859b360ab05bcf4, type: 3}
       propertyPath: m_Name
@@ -353,6 +358,10 @@ PrefabInstance:
       propertyPath: height
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 3337088824327119916, guid: 88bebb33f9d7a5d4f859b360ab05bcf4, type: 3}
+      propertyPath: buttonId
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5971089977924590211, guid: 88bebb33f9d7a5d4f859b360ab05bcf4, type: 3}
       propertyPath: m_Name
       value: AppButton
@@ -470,6 +479,10 @@ PrefabInstance:
     - target: {fileID: 3337088824327119916, guid: 88bebb33f9d7a5d4f859b360ab05bcf4, type: 3}
       propertyPath: height
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3337088824327119916, guid: 88bebb33f9d7a5d4f859b360ab05bcf4, type: 3}
+      propertyPath: buttonId
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5971089977924590211, guid: 88bebb33f9d7a5d4f859b360ab05bcf4, type: 3}
       propertyPath: m_Name
