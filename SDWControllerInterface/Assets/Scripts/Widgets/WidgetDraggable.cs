@@ -2,23 +2,56 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-public class WidgetDraggable : MonoBehaviour, IDragHandler, IPointerDownHandler
+public class WidgetDraggable : MonoBehaviour, IDragHandler, IPointerDownHandler, IEndDragHandler
 {
     [SerializeField] private RectTransform widgetContainer;
+    [SerializeField] private GridLayout grid;
+    private GameObject startCell;
     public void OnDrag(PointerEventData eventData)
     {
-        float yPos = widgetContainer.anchoredPosition.y; //yPos value of the widget container
-        //Since the yPos is measured from the center of widget container halfHeigh helps to get y value of top and bottom of widget container
-        float halfHeight = widgetContainer.rect.height / 2; 
+        if (!GameObject.Find("SnapToGrid").GetComponent<Button>().enabled)
+        {
+            List<RaycastResult> raycastResultList = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(eventData, raycastResultList);
 
-        //If widget container y position is not n widgetpanel area then reposition, else allow dragging
-        if (yPos > -halfHeight)
-            widgetContainer.Translate(new Vector2(0, 2 * (-halfHeight - yPos) - 1));
-        else if (yPos < -475 - halfHeight)
-            widgetContainer.Translate(new Vector2(0, 2 * (-475 - halfHeight - yPos))); 
+            for (int i = 0; i < raycastResultList.Count; i++)
+            {
+                if (raycastResultList[i].gameObject.tag == "gridCell")
+                {
+                    widgetContainer.position = raycastResultList[i].gameObject.transform.position;
+                    startCell = raycastResultList[i].gameObject;
+                    return;
+                }
+            }
+        }
         else
-            widgetContainer.position += (Vector3)eventData.delta;
+        {
+            float yPos = widgetContainer.anchoredPosition.y;
+            if (yPos > 0)
+            {
+                widgetContainer.Translate(new Vector2(0, -30));
+                eventData.pointerDrag = null;
+            }
+            else if (yPos < -475)
+                widgetContainer.Translate(new Vector2(0, 5));
+            else
+                widgetContainer.position += (Vector3)eventData.delta;
+        }
+        
+        
+            //widgetContainer.position += (Vector3)eventData.delta;
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        if(startCell != null)
+        {
+            string[] cellCoordinates = startCell.name.Split(",");
+            widgetContainer.GetComponent<WidgetContainer>().SetOccupiedCells(new Vector2(float.Parse(cellCoordinates[0]), float.Parse(cellCoordinates[1])));
+            startCell = null;
+        }
     }
 
     public void OnPointerDown(PointerEventData eventData)
