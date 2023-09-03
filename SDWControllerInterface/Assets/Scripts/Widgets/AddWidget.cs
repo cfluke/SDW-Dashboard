@@ -18,11 +18,12 @@ public class AddWidget : MonoBehaviour
 
         //Resize widget container to fit the widget
         container.GetComponent<RectTransform>().sizeDelta = widget.GetComponent<RectTransform>().sizeDelta + new Vector2(0, 25);
-        container.GetComponent<WidgetContainer>().SetCellsCount();
+        container.GetComponent<WidgetContainer>().SetDimensions();
         //Set container title to widget name
         container.transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = widgetName;
 
-        GameObject cell = FindStartCell(container.GetComponent<WidgetContainer>().GetXCells(), container.GetComponent<WidgetContainer>().GetYCells());
+        //Find empty cells for the widget and move the widget to those cells
+        GameObject cell = FindEmptyCells(container.GetComponent<WidgetContainer>().GetXCells(), container.GetComponent<WidgetContainer>().GetYCells());
         if(cell != null)
         {
             container.transform.position = cell.transform.position;
@@ -34,8 +35,10 @@ public class AddWidget : MonoBehaviour
         Destroy(GameObject.Find("WidgetSelection(Clone)"));
     }
 
-    public GameObject FindStartCell(int xCells, int yCells)
+    //Find empty cells and return the start cell
+    public GameObject FindEmptyCells(int xCells, int yCells)
     {
+        //Get all occupied cells and put them in a list
         Transform widgetContainerParent = GameObject.Find("Widgets").transform;
         List<Vector2> allOccupiedCells = new List<Vector2>();
         for(int i = 0; i < widgetContainerParent.childCount - 1; i++)
@@ -43,6 +46,7 @@ public class AddWidget : MonoBehaviour
             allOccupiedCells.AddRange(widgetContainerParent.GetChild(i).GetComponent<WidgetContainer>().GetOccupiedCells());
         }
 
+        //Check each cell and if unoccupied, check all cells in the widgets dimensions. If all unoccupied, return first cell
         for (int i = 0; i < 17; i++)
         {
             for (int k = 0; k < 4; k++)

@@ -11,8 +11,10 @@ public class WidgetDraggable : MonoBehaviour, IDragHandler, IPointerDownHandler,
     private GameObject startCell;
     public void OnDrag(PointerEventData eventData)
     {
+        //Check if snap to grid is enabled or not
         if (!GameObject.Find("SnapToGrid").GetComponent<Button>().enabled)
         {
+            //Send raycast down from pointer position and if a gridCell is returned, set the widget position to that cell
             List<RaycastResult> raycastResultList = new List<RaycastResult>();
             EventSystem.current.RaycastAll(eventData, raycastResultList);
 
@@ -28,6 +30,7 @@ public class WidgetDraggable : MonoBehaviour, IDragHandler, IPointerDownHandler,
         }
         else
         {
+            //If snap to grid is off, move the widget with the mouse. If the mouse leaves the widget panel, end drag
             float yPos = widgetContainer.anchoredPosition.y;
             if (yPos > 0)
             {
@@ -40,10 +43,9 @@ public class WidgetDraggable : MonoBehaviour, IDragHandler, IPointerDownHandler,
                 widgetContainer.position += (Vector3)eventData.delta;
         }
         
-        
-            //widgetContainer.position += (Vector3)eventData.delta;
     }
 
+    //Update the occupied cells of the widget on end drag
     public void OnEndDrag(PointerEventData eventData)
     {
         if(startCell != null)
@@ -54,6 +56,7 @@ public class WidgetDraggable : MonoBehaviour, IDragHandler, IPointerDownHandler,
         }
     }
 
+    //Bring the widget to the front of all other widgets when clicked
     public void OnPointerDown(PointerEventData eventData)
     {
         widgetContainer.SetAsLastSibling();
