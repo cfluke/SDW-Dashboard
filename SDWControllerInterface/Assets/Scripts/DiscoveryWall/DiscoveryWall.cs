@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using SerializableData;
 using UnityEngine;
@@ -6,34 +7,40 @@ namespace DiscoveryWall
 {
     public class DiscoveryWall : MonoBehaviour
     {
-        [SerializeField] private KeckDisplay[] keckDisplays;
+        [SerializeField] private GameObject keckDisplayPrefab;
+        private List<KeckDisplay> _keckDisplays;
+
+        private void Start()
+        {
+            _keckDisplays = new List<KeckDisplay>();
+        }
 
         public void Populate(DiscoveryWallSerializable discoveryWallData)
         {
-            // TODO: dynamic instantiation of KeckDisplays
-            // the following function assumes the KeckDisplay[] array is populated from the inspector
-            // however, if we make it so clients can communicate their existence, then we could make them communicate their KeckDisplay info too
-            // then, using that KeckDisplay info, we dynamically instantiate KeckDisplay prefabs, making the UI more robust
-            // however, this also means more moving parts, such as network comms and config files
+            foreach (var keckDisplay in discoveryWallData.keckDisplays)
+                AddKeckDisplay(keckDisplay);
+        }
 
-            for (int i = 0; i < keckDisplays.Length; i++)
-            {
-                KeckDisplay keckDisplay = keckDisplays[i];
-                KeckDisplaySerializable keckDisplayData = discoveryWallData.keckDisplays[i];
-                keckDisplay.Populate(keckDisplayData);
-            }
+        public void AddKeckDisplay(KeckDisplaySerializable keckDisplayData)
+        {
+            GameObject keckDisplayObject = Instantiate(keckDisplayPrefab, transform);
+            KeckDisplay keckDisplay = keckDisplayObject.GetComponent<KeckDisplay>();
+            keckDisplay.Init(keckDisplayData);
+            
+            // remember KeckDisplay
+            _keckDisplays.Add(keckDisplay);
         }
         
         public void Clear()
         {
-            foreach (KeckDisplay keckDisplay in keckDisplays)
+            foreach (KeckDisplay keckDisplay in _keckDisplays)
                 keckDisplay.Clear();
         }
 
         public DiscoveryWallSerializable GetSerializable()
         {
             List<KeckDisplaySerializable> k = new List<KeckDisplaySerializable>();
-            foreach (KeckDisplay keckDisplay in keckDisplays)
+            foreach (KeckDisplay keckDisplay in _keckDisplays)
                 k.Add(keckDisplay.GetSerializable());
             return new DiscoveryWallSerializable(k);
         }

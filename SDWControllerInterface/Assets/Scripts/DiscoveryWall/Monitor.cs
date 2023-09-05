@@ -7,7 +7,7 @@ namespace DiscoveryWall
 {
     public class Monitor : MonoBehaviour
     {
-        public Vector2Int Dimensions { get; private set; } = new(1718, 968); // default to 4k
+        public Vector2Int Dimensions { get; private set; } = new(3840, 2160); // default to 4k
         public Vector2Int Offset { get; private set; } = Vector2Int.zero;
         
         private AppLayout.AppLayout _layout;
@@ -17,12 +17,11 @@ namespace DiscoveryWall
             _layout = GetComponentInChildren<AppLayout.AppLayout>();
         }
 
-        public void Populate(MonitorSerializable monitorData)
+        public void Init(MonitorSerializable monitorData)
         {
             Dimensions = new Vector2Int(monitorData.w, monitorData.h);
             Offset = new Vector2Int(monitorData.x, monitorData.y);
 
-            // TODO: dynamically instantiate AppLayout somehow
             AppLayoutPrefabs appLayouts = FindObjectOfType<AppLayoutPrefabs>();
             if (Enum.TryParse(monitorData.layout, out AppLayouts appLayoutType))
             {
