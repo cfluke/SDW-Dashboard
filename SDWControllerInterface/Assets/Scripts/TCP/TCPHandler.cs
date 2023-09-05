@@ -151,12 +151,14 @@ public sealed class TCPHandler {
 	private void OnMessageReceived(string? clientID, ClientToServerMessage message, TcpClient client) {
 		// Artificially handle indentification messages here before anywhere else
 		if (message.MessageType == MessageTypes.Identify) {
+			IdentifyMessage identifyMessage = JsonUtility.FromJson<IdentifyMessage>(message.payload);
+			
 			lock (clientDictionaryLock) {
 				// TODO: prevent attempting to add ID that is already taken
-				clients.Add(message.payload, client);
+				clients.Add(identifyMessage.id, client);
 			}
 
-			clientID = message.payload;
+			clientID = identifyMessage.id;
 		}
 
 		// If the client is not yet identified; prevent the message from firing
@@ -233,4 +235,19 @@ public class TCPMessageReceivedEventArgs : EventArgs {
 		this.message = message;
 		this.clientID = client;
 	}
+}
+
+[Serializable]
+public class IdentifyMessage
+{
+	public string id;
+	public string ip;
+	public DisplayDetails[] displayDetails;
+}
+
+[Serializable]
+public class DisplayDetails
+{
+	public int x, y;
+	public int w, h;
 }
