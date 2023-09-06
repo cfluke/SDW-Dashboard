@@ -34,7 +34,7 @@ namespace DiscoveryWall
                     ServerToClientMessage message = new ServerToClientMessage
                     {
                         payload = json,
-                        messageType = MessageTypes.Echo // <- change to "AppStart" or something?
+                        MessageType = MessageTypes.Echo // <- change to "AppStart" or something?
                     };
                     
                     // send

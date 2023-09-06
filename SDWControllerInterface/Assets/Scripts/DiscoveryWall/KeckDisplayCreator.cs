@@ -24,7 +24,7 @@ namespace DiscoveryWall
 
         private void OnMessageReceived(object sender, TCPMessageReceivedEventArgs tcpMessageReceivedEventArgs)
         {
-            if (tcpMessageReceivedEventArgs.message.messageType == MessageTypes.Identify)
+            if (tcpMessageReceivedEventArgs.message.MessageType == MessageTypes.Identify)
             {
                 Debug.Log(tcpMessageReceivedEventArgs.message.payload);
                 IdentifyMessage identifyMessage = JsonUtility.FromJson<IdentifyMessage>(tcpMessageReceivedEventArgs.message.payload);
