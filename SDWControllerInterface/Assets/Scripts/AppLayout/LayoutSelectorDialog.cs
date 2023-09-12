@@ -34,6 +34,9 @@ public class LayoutSelectorDialog : MonoBehaviour
             layout.transform.SetAsFirstSibling();
             layoutSelectionDialog.SetActive(false);
             _monitor = null;
+
+            AppLayout.AppLayout appLayout = layout.GetComponent<AppLayout.AppLayout>();
+            appLayout.Init();
         }
         layoutSelectionDialog.SetActive(false);
     }
