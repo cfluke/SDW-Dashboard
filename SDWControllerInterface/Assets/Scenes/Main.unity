@@ -5876,7 +5876,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 547f1e2c09e64024a841a144b70e2469, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogPanel: {fileID: 1604461787}
   layoutSelectionDialog: {fileID: 1201184947}
 --- !u!1 &1626190805
 GameObject:
