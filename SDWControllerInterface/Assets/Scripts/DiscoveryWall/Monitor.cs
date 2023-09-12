@@ -1,81 +1,66 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using AppManagement;
-using JetBrains.Annotations;
+using AppLayout;
+using SerializableData;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace DiscoveryWall
 {
     public class Monitor : MonoBehaviour
     {
-        [SerializeField] private Color defaultColor;
-        [SerializeField] private Color onAppHover;
-        private Image _monitor;
-        private AppDraggablePool _appDraggablePool;
+        public Vector2Int Dimensions { get; private set; } = new(1718, 968); // default to 4k
+        public Vector2Int Offset { get; private set; } = Vector2Int.zero;
         
-        [CanBeNull] public AppDraggable AppDraggable { get; private set; }
+        private AppLayout.AppLayout _layout;
+
+        private void OnTransformChildrenChanged()
+        {
+            _layout = GetComponentInChildren<AppLayout.AppLayout>();
+        }
+
+        public void Populate(MonitorSerializable monitorData)
+        {
+            Dimensions = new Vector2Int(monitorData.w, monitorData.h);
+            Offset = new Vector2Int(monitorData.x, monitorData.y);
+
+            // TODO: dynamically instantiate AppLayout somehow
+            AppLayoutPrefabs appLayouts = FindObjectOfType<AppLayoutPrefabs>();
+            if (Enum.TryParse(monitorData.layout, out AppLayouts appLayoutType))
+            {
+                if (appLayoutType == AppLayouts.None)
+                    return; // no need to populate anything
+                
+                GameObject appLayoutPrefab = appLayouts.GetAppLayoutPrefab(appLayoutType);
+                GameObject appLayoutObject = Instantiate(appLayoutPrefab, transform);
+                appLayoutObject.transform.SetAsFirstSibling();
+
+                AppLayout.AppLayout layout = appLayoutObject.GetComponent<AppLayout.AppLayout>();
+                layout.Populate(monitorData.apps);
+            }
+        }
         
-        void Start()
-        {
-            _monitor = GetComponent<Image>();
-            _appDraggablePool = FindObjectOfType<AppDraggablePool>();
-        }
-
-        private void OnTriggerEnter2D(Collider2D col)
-        {
-            if (AppDraggable)
-                return; // already have an app assigned, ignore any other triggers
-            
-            AppDraggable app = col.GetComponent<AppDraggable>();
-            app.OnMonitorEnter(this);
-            _monitor.color = onAppHover;
-            
-        }
-
-        private void OnTriggerExit2D(Collider2D col)
-        {
-            AppDraggable app = col.GetComponent<AppDraggable>();
-            if (AppDraggable && app != AppDraggable)
-                return; // if this monitor has an app already but it's not the same as the exiting app, then ignore
-            
-            app.OnMonitorExit();
-            _monitor.color = defaultColor;
-        }
-
-        public void NewApp(App app)
-        {
-            // borrow a new AppDraggable from pool
-            AppDraggable appDraggable = _appDraggablePool.Borrow(app);
-            SetApp(appDraggable);
-        }
-
-        public void SetApp(AppDraggable appDraggable)
-        {
-            if (AppDraggable)
-                Clear();
-
-            AppDraggable = appDraggable;
-            if (!AppDraggable) 
-                return; // if null, our work is done
-            
-            // otherwise, update the position and parent of the newly attached AppDraggable
-            // TODO: better solution maybe? 
-            Transform appTransform = AppDraggable.transform;
-            appTransform.SetParent(transform);
-            appTransform.position = transform.position;
-            _monitor.color = onAppHover;
-        }
-
         public void Clear()
         {
-            if (!AppDraggable) 
-                return;
+            if (_layout != null)
+                _layout.Clear();
+        }
+
+        public MonitorSerializable GetSerializable()
+        {
+            string layoutType = AppLayouts.None.ToString();
+            AppSerializable[] apps = Array.Empty<AppSerializable>();
+
+            if (_layout != null)
+            {
+                layoutType = _layout.GetLayoutType().ToString();
+                apps = _layout.Apps;
+            }
             
-            _appDraggablePool.Return(AppDraggable); // return to pool
-            AppDraggable = null;
-            _monitor.color = defaultColor;
+            return new MonitorSerializable(Offset.x, Offset.y, Dimensions.x, Dimensions.y, layoutType, apps);
+        }
+
+        public AppSerializable[] GetSerializableApps()
+        {
+            return _layout != null ? _layout.Apps : Array.Empty<AppSerializable>();
         }
     }
 }

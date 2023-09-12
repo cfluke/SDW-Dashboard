@@ -1,12 +1,18 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using DialogManagement;
 using UnityEngine;
 
 namespace FileExplorer
 {
-    public class FileExplorer : MonoBehaviour
+    public enum FileExplorerDialogType
+    {
+        Save,
+        Open
+    }
+    
+    public class FileExplorer : Dialog<string, FileExplorerArgs>
     {
         private string _currentDirectory = "/";
         private string _selectedFile = string.Empty;
@@ -23,23 +29,19 @@ namespace FileExplorer
         [SerializeField] private FileExplorerSidebar sidebar;
         [SerializeField] private FileExplorerViewport viewport;
         [SerializeField] private FileExplorerFooter footer;
-        
-        // callback functions
-        private Action<string> _onConfirm;
-        
-        public void Init(Action<string> onConfirm, FileExplorerDialogType dialogType, string directory, string extension)
+
+        public override void Init(FileExplorerArgs parameters)
         {
             _backwardHistory = new Stack<string>();
             _forwardHistory = new Stack<string>();
 
-            _onConfirm = onConfirm;
-            _extension = extension;
+            _extension = parameters.Extension;
 
             navbar.Init(OnNavButton);
             viewport.Init(OnFolder, OnFile);
-            footer.Init(dialogType, extension, OnInputFieldUpdate);
+            footer.Init(parameters.DialogType, _extension, OnInputFieldUpdate);
 
-            UpdateDirectory(directory);
+            UpdateDirectory(parameters.Directory);
         }
         
         private bool UpdateDirectory(string directory)
@@ -136,17 +138,25 @@ namespace FileExplorer
         #endregion
 
         #region footer functions
-        
-        public void OnConfirm()
-        {
-            _onConfirm.Invoke(_currentDirectory);
-        }
 
         private void OnInputFieldUpdate(string value)
         {
             _selectedFile = value;
         }
 
+        public async void Confirm()
+        {
+            DialogManager dialogManager = FindObjectOfType<DialogManager>();
+            bool confirm = await dialogManager.OpenConfirmDialog<bool, ConfirmDialogArgs>(null);
+            
+            if (confirm) 
+                OnConfirm.Invoke(Path.Combine(_currentDirectory, _selectedFile));
+        }
+        public void Cancel()
+        {
+            OnConfirm.Invoke(null);
+        }
+        
         #endregion
     }
 }

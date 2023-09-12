@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1972435507784941039}
   - component: {fileID: 6527289140490438905}
-  - component: {fileID: 391929324060565728}
+  - component: {fileID: 1978999570161691407}
   m_Layer: 5
   m_Name: 1
   m_TagString: Untagged
@@ -65,7 +65,7 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &391929324060565728
+--- !u!114 &1978999570161691407
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -74,9 +74,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 5739937207502124501}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd6031a04954c1e4da41019081a96647, type: 3}
+  m_Script: {fileID: 11500000, guid: 5df5172bc4dc1b14fb2df39c461a8bc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layoutType: 1
 --- !u!1001 &8318122867561050829
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -84,6 +85,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1972435507784941039}
     m_Modifications:
+    - target: {fileID: 249480072204845421, guid: 88bebb33f9d7a5d4f859b360ab05bcf4, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.000030517578
+      objectReference: {fileID: 0}
     - target: {fileID: 5971089977924590211, guid: 88bebb33f9d7a5d4f859b360ab05bcf4, type: 3}
       propertyPath: m_Name
       value: AppButton
