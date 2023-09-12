@@ -1,4 +1,3 @@
-using System;
 using DiscoveryWall;
 using SerializableData;
 using UnityEngine;
@@ -20,41 +19,33 @@ namespace AppLayout
     {
         [SerializeField] private AppLayouts layoutType;
         private AppButton[] _appButtons;
-        private Monitor _monitor;
-        
+
+        public Monitor Monitor { get; private set; }
         public AppSerializable[] Apps { get; private set; }
-        
+
+        public void Init()
+        {
+            int appCount = GetAppCount();
+            Apps = new AppSerializable[appCount];
+            _appButtons = GetComponentsInChildren<AppButton>();
+            Monitor = GetComponentInParent<Monitor>();
+        }
+
         public void Populate(AppSerializable[] apps)
         {
-            _appButtons = GetComponentsInChildren<AppButton>();
-            _monitor = GetComponentInParent<Monitor>();
-            
-            Apps = new AppSerializable[apps.Length];
+            Init();
             for (int i = 0; i < apps.Length; i++)
             {
                 AppSerializable app = apps[i];
                 if (app.path.Length > 0)
-                {
-                    Apps[i] = app;
-                    _appButtons[i].ShowAppIcon(app.path);
-                }
+                    AddApp(i, app);
             }
         }
 
-        public void AddApp(int buttonId, string path, float x, float y, float w, float h)
+        public void AddApp(int buttonId, AppSerializable app)
         {
-            _monitor ??= GetComponentInParent<Monitor>();
-            _appButtons ??= GetComponentsInChildren<AppButton>();
-            Apps ??= new AppSerializable[_appButtons.Length];
-
-            int xVal = (int)(x * _monitor.Dimensions.x) + _monitor.Offset.x;
-            int yVal = (int)(y * _monitor.Dimensions.y) + _monitor.Offset.y;
-            int width = (int)(w * _monitor.Dimensions.x);
-            int height = (int)(h * _monitor.Dimensions.y);
-            
-            AppSerializable appSerializable = new AppSerializable(path, xVal, yVal, width, height);
-            Apps[buttonId] = appSerializable;
-            _appButtons[buttonId].ShowAppIcon(path);
+            Apps[buttonId] = app;
+            _appButtons[buttonId].ShowAppIcon(app.icon, string.IsNullOrEmpty(app.name) ? app.path : app.name);
         }
         
         public void Clear()
@@ -66,6 +57,25 @@ namespace AppLayout
         public AppLayouts GetLayoutType()
         {
             return layoutType;
+        }
+
+        private int GetAppCount()
+        {
+            switch (layoutType)
+            {
+                default:
+                    return 0;
+                case AppLayouts.One:
+                    return 1;
+                case AppLayouts.OneOne:
+                    return 2;
+                case AppLayouts.OneTwo:
+                case AppLayouts.TwoOne:
+                case AppLayouts.OneOneOne:
+                    return 3;
+                case AppLayouts.TwoTwo:
+                    return 4;
+            }
         }
     }
 }
