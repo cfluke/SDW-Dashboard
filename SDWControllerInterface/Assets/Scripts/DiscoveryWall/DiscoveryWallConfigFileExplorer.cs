@@ -2,7 +2,6 @@ using System.Threading.Tasks;
 using DialogManagement;
 using FileExplorer;
 using SerializableData;
-using UnityEditor.VersionControl;
 using UnityEngine;
 
 namespace DiscoveryWall
@@ -32,7 +31,7 @@ namespace DiscoveryWall
             DiscoveryWallConfigImporter sdwImporter = new DiscoveryWallConfigImporter(); 
             DiscoveryWallSerializable discoveryWallData = sdwImporter.Import(path);
             _discoveryWall.Clear();
-            _discoveryWall.Set(discoveryWallData);
+            _discoveryWall.Populate(discoveryWallData);
         }
 
         private async Task<string> Open(FileExplorerDialogType dialogType)

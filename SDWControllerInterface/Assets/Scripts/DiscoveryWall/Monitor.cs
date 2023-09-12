@@ -1,4 +1,5 @@
-using System.Collections.Generic;
+using System;
+using AppLayout;
 using SerializableData;
 using UnityEngine;
 
@@ -6,41 +7,60 @@ namespace DiscoveryWall
 {
     public class Monitor : MonoBehaviour
     {
-        private List<AppSerializable> _apps;
+        public Vector2Int Dimensions { get; private set; } = new(1718, 968); // default to 4k
+        public Vector2Int Offset { get; private set; } = Vector2Int.zero;
+        
+        private AppLayout.AppLayout _layout;
 
-        private void Start()
+        private void OnTransformChildrenChanged()
         {
-            _apps = new List<AppSerializable>();
+            _layout = GetComponentInChildren<AppLayout.AppLayout>();
+        }
+
+        public void Populate(MonitorSerializable monitorData)
+        {
+            Dimensions = new Vector2Int(monitorData.w, monitorData.h);
+            Offset = new Vector2Int(monitorData.x, monitorData.y);
+
+            // TODO: dynamically instantiate AppLayout somehow
+            AppLayoutPrefabs appLayouts = FindObjectOfType<AppLayoutPrefabs>();
+            if (Enum.TryParse(monitorData.layout, out AppLayouts appLayoutType))
+            {
+                if (appLayoutType == AppLayouts.None)
+                    return; // no need to populate anything
+                
+                GameObject appLayoutPrefab = appLayouts.GetAppLayoutPrefab(appLayoutType);
+                GameObject appLayoutObject = Instantiate(appLayoutPrefab, transform);
+                appLayoutObject.transform.SetAsFirstSibling();
+
+                AppLayout.AppLayout layout = appLayoutObject.GetComponent<AppLayout.AppLayout>();
+                layout.Populate(monitorData.apps);
+            }
         }
         
         public void Clear()
         {
-            AppLayout.AppLayout appLayout = GetComponentInChildren<AppLayout.AppLayout>();
-            if (appLayout != null)
-                appLayout.Clear();
-            
-            _apps.Clear();
+            if (_layout != null)
+                _layout.Clear();
         }
 
         public MonitorSerializable GetSerializable()
         {
-            return new MonitorSerializable(_apps);
+            string layoutType = AppLayouts.None.ToString();
+            AppSerializable[] apps = Array.Empty<AppSerializable>();
+
+            if (_layout != null)
+            {
+                layoutType = _layout.GetLayoutType().ToString();
+                apps = _layout.Apps;
+            }
+            
+            return new MonitorSerializable(Offset.x, Offset.y, Dimensions.x, Dimensions.y, layoutType, apps);
         }
 
         public AppSerializable[] GetSerializableApps()
         {
-            return _apps.ToArray();
-        }
-
-        public void AddApp(string path, float x, float y, float w, float h)
-        {
-            int xVal = (int)(x * 3840);
-            int yVal = (int)(y * 2160);
-            int width = (int)(w * 3840);
-            int height = (int)(h * 2160);
-            
-            AppSerializable appSerializable = new AppSerializable(path, xVal, yVal, width, height);
-            _apps.Add(appSerializable);
+            return _layout != null ? _layout.Apps : Array.Empty<AppSerializable>();
         }
     }
 }

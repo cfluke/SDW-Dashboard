@@ -1,16 +1,12 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace DialogManagement
 {
-    public class Dialog : MonoBehaviour
+    public abstract class Dialog<T, TParams> : MonoBehaviour where TParams : class
     {
-         public void Destroy()
-         {
-             Destroy(gameObject);
-         }
+        public Action<T> OnConfirm;
+
+        public abstract void Init(TParams parameters);
     }
-}
+} 
