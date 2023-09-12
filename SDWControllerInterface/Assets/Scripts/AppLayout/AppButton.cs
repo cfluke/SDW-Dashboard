@@ -1,5 +1,7 @@
+using System;
 using DialogManagement;
-using FileExplorer;
+using DiscoveryWall;
+using SerializableData;
 using UnityEngine;
 
 namespace AppLayout
@@ -14,28 +16,36 @@ namespace AppLayout
 
         public async void ImportApp()
         {
-            DialogManager dialogManager = FindObjectOfType<DialogManager>();
-            
-            FileExplorerArgs args = new FileExplorerArgs
+            AppLayout appLayout = GetComponentInParent<AppLayout>();
+            AppCreationArgs args;
+
+            if (appLayout.Apps[buttonId] != null)
             {
-                DialogType = FileExplorerDialogType.Open,
-                Directory = "/",
-                Extension = "*" // show any files
-            };
-            
-            string path = await dialogManager.OpenFileDialog<string, FileExplorerArgs>(args);
-            if (path != null)
-            {
-                // add app to app layout
-                AppLayout appLayout = GetComponentInParent<AppLayout>();
-                appLayout.AddApp(buttonId, path, x, y, width, height);
+                args = new ExistingAppCreationArgs
+                {
+                    App = appLayout.Apps[buttonId]
+                };
             }
+            else
+            {
+                Monitor monitor = appLayout.Monitor;
+                args = new NewAppCreationArgs
+                {
+                    Position = new Vector2Int((int)(monitor.Offset.x + monitor.Dimensions.x * x), (int)(monitor.Offset.y + monitor.Dimensions.y * y)),
+                    Dimensions = new Vector2Int((int)(monitor.Dimensions.x * width), (int)(monitor.Dimensions.y * height)) 
+                };
+            }
+            
+
+            AppSerializable app = await DialogManager.Instance.OpenAppCreationDialog<AppSerializable, AppCreationArgs>(args);
+            if (app != null)
+                appLayout.AddApp(buttonId, app);
         }
 
-        public void ShowAppIcon(string path)
+        public void ShowAppIcon(string path, string name)
         {
             // show the app on the UI
-            appButtonIcon.Show(path);
+            appButtonIcon.Show(path, name);
         }
 
         public void Clear()
