@@ -79,6 +79,7 @@ public sealed class TCPHandler {
 	}
 
 	// Handles a new client joining
+	#nullable enable
 	private void HandleClient(object clientObject) {
 		TcpClient client = (TcpClient)clientObject;
 		string? clientID = null;
@@ -92,7 +93,7 @@ public sealed class TCPHandler {
 		// SendMessage is not used here, as it requires the client to have already been identified
 		// Request the client identifies itself
 		SendMessageUnsafe(ns, new ServerToClientMessage {
-			messageType = MessageTypes.RequestIdentify,
+			MessageType = MessageTypes.RequestIdentify,
 			payload = "",
 		});
 
@@ -120,7 +121,7 @@ public sealed class TCPHandler {
 
 		// Artificially creates the disconnect message
 		string disconnectMessage = JsonUtility.ToJson(new ClientToServerMessage {
-			messageType = MessageTypes.Disconnect,
+			MessageType = MessageTypes.Disconnect,
 			payload = "",
 		});
 
@@ -133,6 +134,7 @@ public sealed class TCPHandler {
 			clients.Remove(clientID);
 		}
 	}
+	#nullable disable
 
 	// When a new client joins, make a new thread to handle its messages
 	private void Listen() {
@@ -145,15 +147,18 @@ public sealed class TCPHandler {
 
 	public static event EventHandler<TCPMessageReceivedEventArgs> MessageReceived;
 
+	#nullable enable
 	private void OnMessageReceived(string? clientID, ClientToServerMessage message, TcpClient client) {
 		// Artificially handle indentification messages here before anywhere else
-		if (message.messageType == MessageTypes.Identify) {
+		if (message.MessageType == MessageTypes.Identify) {
+			IdentifyMessage identifyMessage = JsonUtility.FromJson<IdentifyMessage>(message.payload);
+			
 			lock (clientDictionaryLock) {
 				// TODO: prevent attempting to add ID that is already taken
-				clients.Add(message.payload, client);
+				clients.Add(identifyMessage.id, client);
 			}
 
-			clientID = message.payload;
+			clientID = identifyMessage.id;
 		}
 
 		// If the client is not yet identified; prevent the message from firing
@@ -166,13 +171,13 @@ public sealed class TCPHandler {
 		// Create the message event, then fire the event
 		TCPMessageReceivedEventArgs e = new TCPMessageReceivedEventArgs(clientID, message);
 
-		Debug.Log("Message received\n\tType; " + e.message.messageType + "\n\tContents; " + e.message.payload + "\n");
+		Debug.Log("Message received\n\tType; " + e.message.MessageType + "\n\tContents; " + e.message.payload + "\n");
 		MessageReceived?.Invoke(this, e);
 	}
+	#nullable disable
 
 }
 
-// TODO: Make these strings
 public enum MessageTypes {
 	Identify,
 	Disconnect,
@@ -184,13 +189,41 @@ public enum MessageTypes {
 // Shouldn't actually need two different message types; but it's here just in case
 [Serializable]
 public struct ServerToClientMessage {
-	public MessageTypes messageType;
+	public MessageTypes MessageType {
+		get {
+			MessageTypes ret;
+			if (Enum.TryParse<MessageTypes>(messageType, out ret)) {
+				return ret;
+			}
+			throw new Exception("Attempted to parse a Message Type that does not exist");
+		}
+		set {
+			messageType = value.ToString();
+		}
+	}
+	[SerializeField]
+	private string messageType;
+	[SerializeField]
 	public string payload;
 }
 
 [Serializable]
 public struct ClientToServerMessage {
-	public MessageTypes messageType;
+	public MessageTypes MessageType {
+		get {
+			MessageTypes ret;
+			if (Enum.TryParse<MessageTypes>(messageType, out ret)) {
+				return ret;
+			}
+			throw new Exception("Attempted to parse a Message Type that does not exist");
+		}
+		set {
+			messageType = value.ToString();
+		}
+	}
+	[SerializeField]
+	private string messageType;
+	[SerializeField]
 	public string payload;
 }
 
@@ -202,4 +235,19 @@ public class TCPMessageReceivedEventArgs : EventArgs {
 		this.message = message;
 		this.clientID = client;
 	}
+}
+
+[Serializable]
+public class IdentifyMessage
+{
+	public string id;
+	public string ip;
+	public DisplayDetails[] displayDetails;
+}
+
+[Serializable]
+public class DisplayDetails
+{
+	public int x, y;
+	public int w, h;
 }
