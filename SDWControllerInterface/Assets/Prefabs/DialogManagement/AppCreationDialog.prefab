@@ -1,4 +1,4 @@
-﻿%YAML 1.1
+%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!1 &361728410056920228
 GameObject:
@@ -600,7 +600,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 939984745678606213}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c2b52abd7585539438cd9ef9d58eaed9, type: 3}
+  m_Script: {fileID: 11500000, guid: 6b1149178004431294165044a011a8ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   icon: {fileID: 4482434582014811920}
@@ -1952,7 +1952,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4310382147172066174}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82693a6e7d2fa2142ba0500de63e1215, type: 3}
+  m_Script: {fileID: 11500000, guid: 69bbd371a2c542cdba37eb3b54e82b22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   path: {fileID: 3961049259568257477}

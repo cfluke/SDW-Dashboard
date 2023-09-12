@@ -2303,7 +2303,6 @@ MonoBehaviour:
   sidebar: {fileID: 4741317428183260757}
   viewport: {fileID: 4741317428607573502}
   footer: {fileID: 4741317428627390360}
-  confirmDialog: {fileID: 4310382147172066174, guid: 834e46009cab28f42af6ec9dd14ddcfa, type: 3}
 --- !u!1 &4741317428916850642
 GameObject:
   m_ObjectHideFlags: 0
@@ -4022,7 +4021,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.0627451}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
