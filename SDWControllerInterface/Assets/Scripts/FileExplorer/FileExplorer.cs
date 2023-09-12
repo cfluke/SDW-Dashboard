@@ -146,8 +146,7 @@ namespace FileExplorer
 
         public async void Confirm()
         {
-            DialogManager dialogManager = FindObjectOfType<DialogManager>();
-            bool confirm = await dialogManager.OpenConfirmDialog<bool, ConfirmDialogArgs>(null);
+            bool confirm = await DialogManager.Instance.OpenConfirmDialog<bool, ConfirmDialogArgs>(null);
             
             if (confirm) 
                 OnConfirm.Invoke(Path.Combine(_currentDirectory, _selectedFile));

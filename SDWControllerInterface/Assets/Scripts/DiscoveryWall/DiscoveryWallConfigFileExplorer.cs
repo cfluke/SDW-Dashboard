@@ -8,9 +8,7 @@ namespace DiscoveryWall
 {
     public class DiscoveryWallConfigFileExplorer : MonoBehaviour
     {
-        [SerializeField] private DialogManager dialogManager;
         private DiscoveryWall _discoveryWall;
-
         private string path;
 
         public async void SaveDialog()
@@ -43,7 +41,7 @@ namespace DiscoveryWall
                 Extension = "*.sdw"
             };
             
-            return await dialogManager.OpenFileDialog<string, FileExplorerArgs>(args);
+            return await DialogManager.Instance.OpenFileDialog<string, FileExplorerArgs>(args);
         }
     }
 }
