@@ -34,16 +34,34 @@ namespace DiscoveryWall
                     ServerToClientMessage message = new ServerToClientMessage
                     {
                         payload = json,
-                        MessageType = MessageTypes.Echo // <- change to "AppStart" or something?
+                        MessageType = MessageTypes.StartApp // <- change to "AppStart" or something?
                     };
                     
                     // send
-                    Debug.Log("Attempting to send " + json + " to " + _id);
+                    Debug.Log("Sending " + json + " to " + _id);
                     if (!TCPHandler.SendMessage(_id, message))
                     {
                         Debug.Log("Client doesn't exist!");
                     }
                 }
+            }
+        }
+        
+        
+        public void StopApps()
+        {
+            // create TCP message
+            ServerToClientMessage message = new ServerToClientMessage
+            {
+                payload = "",
+                MessageType = MessageTypes.StopApps
+            };
+        
+            // send
+            Debug.Log("Sending " + message.MessageType + " to " + _id);
+            if (!TCPHandler.SendMessage(_id, message))
+            {
+                Debug.Log("Client doesn't exist!");
             }
         }
 

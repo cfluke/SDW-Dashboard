@@ -184,6 +184,8 @@ public enum MessageTypes {
 	RequestIdentify,
 	RequestEcho,
 	Echo,
+	StartApp,
+	StopApps
 }
 
 // Shouldn't actually need two different message types; but it's here just in case

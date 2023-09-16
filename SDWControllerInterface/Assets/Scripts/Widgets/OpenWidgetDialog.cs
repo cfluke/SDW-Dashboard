@@ -27,8 +27,8 @@ public class OpenWidgetDialog : MonoBehaviour
         foreach (var widget in widgetPrefabs)
         {
             //Instantiate a widget details UI section and translate it down
-            GameObject wd = GameObject.Instantiate(widgetDetails, scrollViewContent);
-            wd.transform.Translate(new Vector2(0, -1 * i * 440));
+            GameObject wd = Instantiate(widgetDetails, scrollViewContent);
+            //wd.transform.Translate(new Vector2(0, -1 * i * 440));
 
             //Set name textbox to the widget name
             GameObject txtName = wd.transform.GetChild(0).gameObject;
