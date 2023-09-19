@@ -176,7 +176,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   monitorPrefab: {fileID: 8481646247522879912, guid: dec84ee340b0e59498c54bd0189ceb2b, type: 3}
   id: {fileID: 2038993207272097645}
-  ip: {fileID: 0}
 --- !u!1 &2435125897303989746
 GameObject:
   m_ObjectHideFlags: 0
@@ -231,7 +230,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 4
+    m_Left: 0
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
@@ -256,7 +255,6 @@ GameObject:
   - component: {fileID: 7206216292127777536}
   - component: {fileID: 4928289353723635978}
   - component: {fileID: 2328249231644092061}
-  - component: {fileID: 5782457648280274503}
   m_Layer: 5
   m_Name: Stop
   m_TagString: Untagged
@@ -276,13 +274,13 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7713942612494256534}
+  m_Father: {fileID: 4892020347290505307}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 30, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 14.999994, y: -15.44375}
+  m_SizeDelta: {x: 31, y: 31}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7206216292127777536
 CanvasRenderer:
@@ -305,7 +303,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.62352943, g: 0.2901961, b: 0.2901961, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -342,86 +340,6 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
---- !u!114 &5782457648280274503
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3563703927254435774}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 0
-    m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
-  m_Colors:
-    m_NormalColor: {r: 0.34509805, g: 0.34509805, b: 0.34509805, a: 1}
-    m_HighlightedColor: {r: 0.62352943, g: 0.2901961, b: 0.2901961, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.62352943, g: 0.2901961, b: 0.2901961, a: 1}
-    m_DisabledColor: {r: 0.34509805, g: 0.34509805, b: 0.34509805, a: 1}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_SelectedTrigger: Selected
-    m_DisabledTrigger: Disabled
-  m_Interactable: 0
-  m_TargetGraphic: {fileID: 4928289353723635978}
-  m_OnClick:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 55872066672690004}
-        m_TargetAssemblyTypeName: UnityEngine.UI.Toggle, UnityEngine.UI
-        m_MethodName: set_isOn
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 55872066672690004}
-        m_TargetAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
-        m_MethodName: set_interactable
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 1138694759536993453}
-        m_TargetAssemblyTypeName: DiscoveryWall.KeckDisplay, Assembly-CSharp
-        m_MethodName: StopApps
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
 --- !u!1 &6574842550408513998
 GameObject:
   m_ObjectHideFlags: 0
@@ -451,7 +369,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1164690112071336538}
   - {fileID: 4892020347290505307}
   m_Father: {fileID: 4081562696593881924}
   m_RootOrder: 3
@@ -578,9 +495,9 @@ RectTransform:
   m_Father: {fileID: 4081562696593881924}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 85.990005, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 81.990005, y: -15}
   m_SizeDelta: {x: 0, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8304116847844232518
@@ -725,9 +642,10 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1164690112071336538}
   m_Father: {fileID: 7713942612494256534}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -755,7 +673,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.2901961, g: 0.62352943, b: 0.37647063, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -813,9 +731,9 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 0.34509805, g: 0.34509805, b: 0.34509805, a: 1}
-    m_HighlightedColor: {r: 0.2901961, g: 0.62352943, b: 0.37647063, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.2509804, g: 0.2509804, b: 0.2509804, a: 1}
+    m_PressedColor: {r: 0.7686275, g: 0.7686275, b: 0.7686275, a: 1}
     m_SelectedColor: {r: 0.2901961, g: 0.62352943, b: 0.37647063, a: 1}
     m_DisabledColor: {r: 0.2901961, g: 0.62352943, b: 0.37647063, a: 1}
     m_ColorMultiplier: 1
@@ -834,39 +752,15 @@ MonoBehaviour:
   m_Interactable: 1
   m_TargetGraphic: {fileID: 7090258127613334828}
   toggleTransition: 1
-  graphic: {fileID: 0}
+  graphic: {fileID: 4928289353723635978}
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5782457648280274503}
-        m_TargetAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
-        m_MethodName: set_interactable
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 55872066672690004}
-        m_TargetAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
-        m_MethodName: set_interactable
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 1138694759536993453}
         m_TargetAssemblyTypeName: DiscoveryWall.KeckDisplay, Assembly-CSharp
-        m_MethodName: StartApps
-        m_Mode: 1
+        m_MethodName: ToggleApps
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

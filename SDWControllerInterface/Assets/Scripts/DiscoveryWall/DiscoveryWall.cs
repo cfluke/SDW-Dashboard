@@ -37,6 +37,18 @@ namespace DiscoveryWall
                 keckDisplay.Clear();
         }
 
+        public void StartApps()
+        {
+            foreach (KeckDisplay keckDisplay in _keckDisplays)
+                keckDisplay.ToggleApps(true);
+        }
+
+        public void StopApps()
+        {
+            foreach (KeckDisplay keckDisplay in _keckDisplays)
+                keckDisplay.ToggleApps(false);
+        }
+
         public DiscoveryWallSerializable GetSerializable()
         {
             List<KeckDisplaySerializable> k = new List<KeckDisplaySerializable>();

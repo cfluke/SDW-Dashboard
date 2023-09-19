@@ -7,39 +7,33 @@ public class MainThreadDispatcher : MonoBehaviour
     // singleton
     private static MainThreadDispatcher _instance;
 
-    private readonly Queue<Action> actions = new Queue<Action>();
-
-    private static bool _applicationIsQuitting = false;
-
     public static MainThreadDispatcher Instance
     {
         get
         {
-            if (_applicationIsQuitting)
-            {
-                Debug.LogWarning("MainThreadDispatcher.Instance is already destroyed and cannot be accessed.");
-                return null;
-            }
-
-            if (_instance == null)
-            {
-                // TODO: change this to cache singleton instance at runtime instead - needs to instantiate itself in the main thread
-                GameObject go = new GameObject("MainThreadDispatcher");
-                _instance = go.AddComponent<MainThreadDispatcher>();
-                DontDestroyOnLoad(go);
-            }
-
-            return _instance;
+            if (_instance != null) 
+                return _instance;
+            
+            Debug.Log("No MainThreadDispatcher instance found!");
+            return null;
         }
+    }
+
+    // queue of actions to perform
+    private readonly Queue<Action> _actions = new();
+
+    private void Start()
+    {
+        _instance = this;
     }
 
     private void Update()
     {
-        lock (actions)
+        lock (_actions)
         {
-            while (actions.Count > 0)
+            while (_actions.Count > 0)
             {
-                Action action = actions.Dequeue();
+                Action action = _actions.Dequeue();
                 action.Invoke();
             }
         }
@@ -47,14 +41,9 @@ public class MainThreadDispatcher : MonoBehaviour
 
     public void Enqueue(Action action)
     {
-        lock (actions)
+        lock (_actions)
         {
-            actions.Enqueue(action);
+            _actions.Enqueue(action);
         }
-    }
-
-    private void OnDestroy()
-    {
-        _applicationIsQuitting = true;
     }
 }

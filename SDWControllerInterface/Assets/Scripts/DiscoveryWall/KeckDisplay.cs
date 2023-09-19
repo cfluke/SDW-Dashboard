@@ -10,13 +10,20 @@ namespace DiscoveryWall
     {
         [SerializeField] private GameObject monitorPrefab;
         [SerializeField] private TMP_Text id;
-        [SerializeField] private TMP_Text ip;
         
         private string _id;
         private string _ip;
         private List<Monitor> _monitors;
-        
-        public void StartApps()
+
+        public void ToggleApps(bool isOn)
+        {
+            if (isOn)
+                StartApps();
+            else 
+                StopApps();
+        }
+
+        private void StartApps()
         {
             foreach (Monitor monitor in _monitors)
             {
@@ -26,17 +33,17 @@ namespace DiscoveryWall
                 {
                     if (app == null)
                         continue;
-                    
+
                     // serialize app object to json
                     string json = JsonUtility.ToJson(app);
-                    
+
                     // create TCP message
                     ServerToClientMessage message = new ServerToClientMessage
                     {
                         payload = json,
                         MessageType = MessageTypes.StartApp // <- change to "AppStart" or something?
                     };
-                    
+
                     // send
                     Debug.Log("Sending " + json + " to " + _id);
                     if (!TCPHandler.SendMessage(_id, message))
@@ -46,9 +53,8 @@ namespace DiscoveryWall
                 }
             }
         }
-        
-        
-        public void StopApps()
+
+        private void StopApps()
         {
             // create TCP message
             ServerToClientMessage message = new ServerToClientMessage
@@ -83,7 +89,6 @@ namespace DiscoveryWall
 
             // update UI elements
             id.text = _id;
-            ip.text = _ip;
         }
         
         public void Clear()

@@ -10,13 +10,11 @@ namespace DiscoveryWall
     public class KeckDisplayCreator : MonoBehaviour
     {
         private DiscoveryWall _discoveryWall;
-        private MainThreadDispatcher _mainThreadDispatcher;
         private int _keckDisplayCount = 1;
         
         private void Start()
         {
             _discoveryWall = GetComponent<DiscoveryWall>();
-            _mainThreadDispatcher = GetComponent<MainThreadDispatcher>();
             
             // start TCPHandler (just in case) and register MessageReceived event listener
             TCPHandler.Instantiate();
@@ -86,7 +84,7 @@ namespace DiscoveryWall
 
             // create KeckDisplay data and use it to create a new KeckDisplay UI element in the SDW
             KeckDisplaySerializable keckDisplayData = new KeckDisplaySerializable(id, ip, monitors);
-            _mainThreadDispatcher.Enqueue(() => { _discoveryWall.AddKeckDisplay(keckDisplayData); });
+            MainThreadDispatcher.Instance.Enqueue(() => { _discoveryWall.AddKeckDisplay(keckDisplayData); });
         }
     }
 }
