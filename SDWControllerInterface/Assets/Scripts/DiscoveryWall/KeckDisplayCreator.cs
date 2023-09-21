@@ -70,6 +70,7 @@ namespace DiscoveryWall
             // get id, ip, and monitors to add to KeckDisplay
             string id = identifyMessage.id;
             string ip = identifyMessage.ip;
+            string path = identifyMessage.path;
             List<MonitorSerializable> monitors = new List<MonitorSerializable>();
             foreach (DisplayDetails displayDetails in identifyMessage.displayDetails)
             {
@@ -83,7 +84,7 @@ namespace DiscoveryWall
             }
 
             // create KeckDisplay data and use it to create a new KeckDisplay UI element in the SDW
-            KeckDisplaySerializable keckDisplayData = new KeckDisplaySerializable(id, ip, monitors);
+            KeckDisplaySerializable keckDisplayData = new KeckDisplaySerializable(id, ip, path, monitors);
             MainThreadDispatcher.Instance.Enqueue(() => { _discoveryWall.AddKeckDisplay(keckDisplayData); });
         }
     }

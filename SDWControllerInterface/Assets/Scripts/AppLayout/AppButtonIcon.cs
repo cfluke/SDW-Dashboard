@@ -8,18 +8,15 @@ namespace AppLayout
 {
     public class AppButtonIcon : MonoBehaviour
     {
-        [SerializeField] private Image fileSprite;
+        [SerializeField] private Image icon;
         [SerializeField] private TMP_Text appName;
 
-        public void Show(string path, string name)
+        public void Show(Sprite sprite, string title)
         {
-            Sprite sprite = ImageLoader.Instance.LoadImageAsSprite(path);
+            appName.text = title;
             if (sprite != null)
-                fileSprite.sprite = sprite;
+                icon.sprite = sprite;
             
-            appName.text = name;
-            
-            // finally, enable
             gameObject.SetActive(true);
         }
 

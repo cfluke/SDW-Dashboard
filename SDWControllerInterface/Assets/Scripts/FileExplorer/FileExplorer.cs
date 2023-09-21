@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using DialogManagement;
+using DialogManagement.Confirm;
 using UnityEngine;
 
 namespace FileExplorer
@@ -144,14 +145,17 @@ namespace FileExplorer
             _selectedFile = value;
         }
 
-        public async void Confirm()
+        public override async void Confirm()
         {
-            bool confirm = await DialogManager.Instance.OpenConfirmDialog<bool, ConfirmDialogArgs>(null);
-            
+            ConfirmDialogArgs args = new ConfirmDialogArgs
+            {
+                Message = "Proceed?"
+            };
+            bool confirm = await DialogManager.Instance.OpenConfirmDialog<bool, ConfirmDialogArgs>(args);
             if (confirm) 
                 OnConfirm.Invoke(Path.Combine(_currentDirectory, _selectedFile));
         }
-        public void Cancel()
+        public override void Cancel()
         {
             OnConfirm.Invoke(null);
         }

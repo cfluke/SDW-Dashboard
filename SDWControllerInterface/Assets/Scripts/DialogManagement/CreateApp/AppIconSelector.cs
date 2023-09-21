@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Utility;
 
-namespace DialogManagement
+namespace DialogManagement.CreateApp
 {
     public class AppIconSelector : MonoBehaviour
     {
@@ -28,6 +28,7 @@ namespace DialogManagement
                 Directory = "/",
                 Extension = "*.png"
             };
+            
             string path = await DialogManager.Instance.OpenFileDialog<string, FileExplorerArgs>(args);
             if (path != null)
                 Icon = path;

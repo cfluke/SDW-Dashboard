@@ -1,8 +1,10 @@
-using System;
 using DialogManagement;
+using DialogManagement.CreateApp;
 using DiscoveryWall;
 using SerializableData;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace AppLayout
 {
@@ -11,46 +13,67 @@ namespace AppLayout
         [SerializeField] private int buttonId;
         [Range(0, 1.0f)] [SerializeField] private float x, y;
         [Range(0, 1.0f)] [SerializeField] private float width = 1.0f, height = 1.0f;
+        [SerializeField] private Color selectedColour;
 
-        [SerializeField] private AppButtonIcon appButtonIcon;
+        public int ID => buttonId;
+        public Vector2 Position => new (x, y);
+        public Vector2 Dimensions => new (width, height);
+        
+        private AppButtonIcon _appButtonIcon;
+        public AppButtonIcon AppButtonIcon
+        {
+            get
+            {
+                if (_appButtonIcon == null)
+                    _appButtonIcon = GetComponentInChildren<AppButtonIcon>(true);
+                return _appButtonIcon;
+            }
+        }
 
         public async void ImportApp()
         {
+            // colour the button so the user remembers which button they're adding the app to
+            Image image = GetComponent<Image>();
+            Color originalColour = image.color;
+            image.color = selectedColour;
+            
             AppLayout appLayout = GetComponentInParent<AppLayout>();
-            AppCreationArgs args;
+            AppCreationArgs args = new AppCreationArgs();
 
+            // check to see if there's already an App in the button, if so add it to args so the AppCreationDialog pre-fills
             if (appLayout.Apps[buttonId] != null)
             {
-                args = new ExistingAppCreationArgs
+                args = new AppCreationArgs
                 {
-                    App = appLayout.Apps[buttonId]
-                };
-            }
-            else
-            {
-                Monitor monitor = appLayout.Monitor;
-                args = new NewAppCreationArgs
-                {
-                    Position = new Vector2Int((int)(monitor.Offset.x + monitor.Dimensions.x * x), (int)(monitor.Offset.y + monitor.Dimensions.y * y)),
-                    Dimensions = new Vector2Int((int)(monitor.Dimensions.x * width), (int)(monitor.Dimensions.y * height)) 
+                    App = new App(appLayout.Apps[buttonId])
                 };
             }
             
-
-            AppSerializable app = await DialogManager.Instance.OpenAppCreationDialog<AppSerializable, AppCreationArgs>(args);
+            // open the "Create App" dialog for the user
+            App app = await DialogManager.Instance.OpenAppCreationDialog<App, AppCreationArgs>(args);
             if (app != null)
                 appLayout.AddApp(buttonId, app);
+            
+            // reset colour back
+            image.color = originalColour;
         }
 
-        public void ShowAppIcon(string path, string name)
+        public void AddApp(App app)
         {
-            // show the app on the UI
-            appButtonIcon.Show(path, name);
+            AppLayout appLayout = GetComponentInParent<AppLayout>();
+            appLayout.AddApp(buttonId, app);
         }
 
-        public void Clear()
+        public void OnPointerEnter(PointerEventData eventData)
         {
-            appButtonIcon.Hide();
+            Button button = GetComponent<Button>();
+            button.OnPointerEnter(eventData);
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            Button button = GetComponent<Button>();
+            button.OnPointerExit(eventData);
         }
     }
 }

@@ -24,12 +24,15 @@ namespace DiscoveryWall
         {
             // get path
             path = await Open(FileExplorerDialogType.Open);
-            
-            _discoveryWall = FindObjectOfType<DiscoveryWall>();
-            DiscoveryWallConfigImporter sdwImporter = new DiscoveryWallConfigImporter(); 
-            DiscoveryWallSerializable discoveryWallData = sdwImporter.Import(path);
-            _discoveryWall.Clear();
-            _discoveryWall.Populate(discoveryWallData);
+
+            if (!string.IsNullOrEmpty(path))
+            {
+                _discoveryWall = FindObjectOfType<DiscoveryWall>();
+                DiscoveryWallConfigImporter sdwImporter = new DiscoveryWallConfigImporter(); 
+                DiscoveryWallSerializable discoveryWallData = sdwImporter.Import(path);
+                _discoveryWall.Clear();
+                _discoveryWall.Populate(discoveryWallData);
+            }
         }
 
         private async Task<string> Open(FileExplorerDialogType dialogType)

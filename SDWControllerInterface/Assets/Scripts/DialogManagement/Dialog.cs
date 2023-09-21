@@ -8,5 +8,7 @@ namespace DialogManagement
         public Action<T> OnConfirm;
 
         public abstract void Init(TParams parameters);
+        public abstract void Confirm();
+        public abstract void Cancel();
     }
 } 

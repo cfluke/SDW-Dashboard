@@ -6,15 +6,17 @@ namespace SerializableData
     [Serializable]
     public class KeckDisplaySerializable
     {
-        public MonitorSerializable[] monitors;
         public string id;
-        public string ip; // TODO: this might need to change to permanent DNS address or MAC address or something
+        public string ip;
+        public string path;
+        public MonitorSerializable[] monitors;
 
-        public KeckDisplaySerializable(string clientId, string ipAddress, List<MonitorSerializable> m)
+        public KeckDisplaySerializable(string clientId, string ipAddress, string listenerPath, List<MonitorSerializable> m)
         {
-            monitors = m.ToArray();
             id = clientId;
             ip = ipAddress;
+            path = listenerPath;
+            monitors = m.ToArray();
         }
     }
 }

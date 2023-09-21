@@ -1,5 +1,7 @@
+using System.Linq;
 using DiscoveryWall;
 using SerializableData;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace AppLayout
@@ -19,8 +21,8 @@ namespace AppLayout
     {
         [SerializeField] private AppLayouts layoutType;
         private AppButton[] _appButtons;
+        private Monitor _monitor;
 
-        public Monitor Monitor { get; private set; }
         public AppSerializable[] Apps { get; private set; }
 
         public void Init()
@@ -28,7 +30,7 @@ namespace AppLayout
             int appCount = GetAppCount();
             Apps = new AppSerializable[appCount];
             _appButtons = GetComponentsInChildren<AppButton>();
-            Monitor = GetComponentInParent<Monitor>();
+            _monitor = GetComponentInParent<Monitor>();
         }
 
         public void Populate(AppSerializable[] apps)
@@ -38,20 +40,40 @@ namespace AppLayout
             {
                 AppSerializable app = apps[i];
                 if (app.path.Length > 0)
-                    AddApp(i, app);
+                    AddApp(i, new App(app));
             }
         }
 
-        public void AddApp(int buttonId, AppSerializable app)
+        public void AddApp(int buttonId, App app)
         {
-            Apps[buttonId] = app;
-            _appButtons[buttonId].ShowAppIcon(app.icon, string.IsNullOrEmpty(app.name) ? app.path : app.name);
+            AppButton appButton = _appButtons.FirstOrDefault(button => button.ID == buttonId);
+            if (appButton == null)
+            {
+                Debug.LogError("AppButton with ID: " + buttonId + " does not exist");
+                return;
+            }
+            
+            // calculate the x, y, w, and h according to monitor position/dimensions and the position/dimensions of
+            // the button/portion of the screen. For example w = 3840 * 0.5
+            Vector2 buttonPosition = appButton.Position;
+            Vector2 buttonDimensions = appButton.Dimensions;
+            int x = (int)(_monitor.Dimensions.x * buttonPosition.x) + _monitor.Offset.x;
+            int y = (int)(_monitor.Dimensions.y * buttonPosition.y) + _monitor.Offset.y;
+            int w = (int)(_monitor.Dimensions.x * buttonDimensions.x);
+            int h = (int)(_monitor.Dimensions.y * buttonDimensions.y);
+            
+            // create and set a new AppSerializable in the Apps array, for later saving/serialization
+            AppSerializable newApp = new AppSerializable(app.Path, x, y, w, h, app.Name, app.Args, app.IconPath);
+            Apps[buttonId] = newApp;
+            
+            // show the AppIcon in the button
+            appButton.AppButtonIcon.Show(app.Icon, string.IsNullOrEmpty(app.Name) ? app.Path : app.Name);
         }
         
         public void Clear()
         {
             foreach (AppButton appButton in _appButtons)
-                appButton.Clear();
+                appButton.AppButtonIcon.Hide();
         }
 
         public AppLayouts GetLayoutType()

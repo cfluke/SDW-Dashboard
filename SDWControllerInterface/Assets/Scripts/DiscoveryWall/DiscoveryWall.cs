@@ -7,6 +7,7 @@ namespace DiscoveryWall
 {
     public class DiscoveryWall : MonoBehaviour
     {
+        [SerializeField] private GameObject discoveryWallPlaceholder;
         [SerializeField] private GameObject keckDisplayPrefab;
         private List<KeckDisplay> _keckDisplays;
 
@@ -29,6 +30,9 @@ namespace DiscoveryWall
             
             // remember KeckDisplay
             _keckDisplays.Add(keckDisplay);
+            
+            // deactivate "Awaiting KeckDisplays..." placeholder
+            discoveryWallPlaceholder.SetActive(false);
         }
         
         public void Clear()

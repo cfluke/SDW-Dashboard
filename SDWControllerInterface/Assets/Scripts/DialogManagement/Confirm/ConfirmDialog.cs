@@ -1,4 +1,7 @@
-namespace DialogManagement
+using TMPro;
+using UnityEngine;
+
+namespace DialogManagement.Confirm
 {
     public class ConfirmDialogArgs
     {
@@ -7,17 +10,19 @@ namespace DialogManagement
 
     public class ConfirmDialog : Dialog<bool, ConfirmDialogArgs>
     {
+        [SerializeField] private TMP_Text message;
+        
         public override void Init(ConfirmDialogArgs parameters)
         {
-            
+            message.text = parameters.Message;
         }
 
-        public void Confirm()
+        public override void Confirm()
         {
             OnConfirm.Invoke(true);
         }
 
-        public void Cancel()
+        public override void Cancel()
         {
             OnConfirm.Invoke(false);
         }

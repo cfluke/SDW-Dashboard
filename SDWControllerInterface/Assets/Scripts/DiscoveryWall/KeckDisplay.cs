@@ -13,6 +13,7 @@ namespace DiscoveryWall
         
         private string _id;
         private string _ip;
+        private string _path;
         private List<Monitor> _monitors;
 
         public void ToggleApps(bool isOn)
@@ -75,6 +76,7 @@ namespace DiscoveryWall
         {
             _id = keckDisplayData.id;
             _ip = keckDisplayData.ip;
+            _path = keckDisplayData.path;
             _monitors = new List<Monitor>();
 
             foreach (MonitorSerializable m in keckDisplayData.monitors)
@@ -102,7 +104,7 @@ namespace DiscoveryWall
             List<MonitorSerializable> m = new List<MonitorSerializable>();
             foreach (Monitor monitor in _monitors)
                 m.Add(monitor.GetSerializable());
-            return new KeckDisplaySerializable(_id, _ip, m);
+            return new KeckDisplaySerializable(_id, _ip, _path, m);
         }
     }
 }

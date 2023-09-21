@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DialogManagement.Widget;
 using UnityEngine;
 using TMPro;
 
@@ -32,7 +33,8 @@ public class AddWidget : MonoBehaviour
         }
 
         //Destroy widget selection menu
-        Destroy(GameObject.Find("WidgetSelection(Clone)"));
+        WidgetSelectionDialog widgetSelectionDialog = GetComponentInParent<WidgetSelectionDialog>();
+        widgetSelectionDialog.Confirm();
     }
 
     //Find empty cells and return the start cell

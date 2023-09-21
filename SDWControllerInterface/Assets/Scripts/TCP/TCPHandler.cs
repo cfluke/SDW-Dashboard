@@ -244,6 +244,7 @@ public class IdentifyMessage
 {
 	public string id;
 	public string ip;
+	public string path;
 	public DisplayDetails[] displayDetails;
 }
 
