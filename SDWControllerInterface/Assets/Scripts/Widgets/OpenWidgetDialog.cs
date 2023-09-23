@@ -14,7 +14,11 @@ public class OpenWidgetDialog : MonoBehaviour
         {
             WidgetPrefabs = _widgetPrefabs
         };
-        await DialogManager.Instance.Open<object, WidgetSelectionDialogArgs>(widgetSelectionDialogPrefab, args);
+        if (GameObject.Find("WidgetSelectionDialog(Clone)") == null)
+        {
+            await DialogManager.Instance.Open<object, WidgetSelectionDialogArgs>(widgetSelectionDialogPrefab, args);
+        }
+            
     }
 
 }
