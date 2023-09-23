@@ -12,6 +12,7 @@
   </p>
 </div>
 
+<img src="dashboard.png" alt="SmartSat CRC Logo">
 
 <!-- TABLE OF CONTENTS -->
 <details>
@@ -24,17 +25,15 @@
         <li><a href="#supported-platforms">Supported Platforms</a></li>
       </ul>
     </li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#usage">Usage</a></li>
     <li>
-      <a href="#getting-started">Getting Started</a>
+      <a href="#contributing">Contributing</a>
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#features">Features</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contributors">Contributors</a></li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
@@ -47,27 +46,10 @@
 The SDW Controller is a dashboard app which, in combination with the SDW Listener, allows users of the SSA Lab to remotely launch applications for all KeckDisplays from a single KeckDisplay.
 
 #### Built With
-![CSharp][cs] ![Unity][unity]
+![Unity][unity] ![CSharp][cs]
 
 #### Supported Platforms
-![CentOS][centos] ![Windows][windows] ![Mac][mac]
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-<!-- GETTING STARTED -->
-## Getting Started
-
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
-
-### Prerequisites
-
-
-
-### Installation
-
-
+![CentOS][centos]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -77,19 +59,35 @@ To get a local copy up and running follow these simple example steps.
 ## Features
 
 - [x] TCP communication
-    - [x] Send
-    - [x] Receive
+- [ ] SSH functionality
 - [x] Dialog/popup system
-    - [x] 'Open/Save File'
-    - [x] 'Confirm'
-    - [ ] 'About'
-- [ ] Widget system
-- [ ] Logging
-- [ ] SDW
+    - [x] File Picker
+    - [x] Confirm
+- [x] Widget system
+    - [x] Play/Stop All
+    - [x] Clock
+    - [x] Apps
+    - [x] Firefox
+    - [ ] Console
+    - [ ] `Data Streams` integration
+- [x] SDW system
     - [x] Layout selection
     - [x] App selection
-    - [x] Config import/export
-    - [ ] App execution
+    - [x] App execution
+- [ ] Logging
+- [ ] Save/Load
+    - [x] SDW
+    - [ ] Widgets
+
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- USAGE -->
+## Usage
+
+Provide instructions on how to download the latest release, install/extract it, run it, etc.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -98,25 +96,15 @@ To get a local copy up and running follow these simple example steps.
 <!-- CONTRIBUTING -->
 ## Contributing
 
-Insert instructions on how to contribute here.
+This is an example of how you may give instructions on setting up the project locally and start contributing.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- LICENSE -->
-## License
-
-Distributed under the MIT License. See `LICENSE.txt` for more information.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+### Prerequisites
 
 
 
-<!-- CONTRIBUTORS -->
-## Contributors
+### Installation
 
-Your Name - [@your_twitter](https://twitter.com/your_username) - email@example.com
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
