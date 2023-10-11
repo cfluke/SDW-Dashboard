@@ -25,6 +25,11 @@ namespace AppLayout
 
         public AppSerializable[] Apps { get; private set; }
 
+        public void Awake()
+        {
+            Init();
+        }
+
         public void Init()
         {
             int appCount = GetAppCount();

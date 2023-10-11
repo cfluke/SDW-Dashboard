@@ -10,12 +10,19 @@ namespace AppLayout
     {
         [SerializeField] private Image icon;
         [SerializeField] private TMP_Text appName;
+        [SerializeField] Sprite defaultFileSprite;
 
         public void Show(Sprite sprite, string title)
         {
             appName.text = title;
             if (sprite != null)
+            {
                 icon.sprite = sprite;
+            }
+            else
+            {
+                icon.sprite = defaultFileSprite;
+            }
             
             gameObject.SetActive(true);
         }
