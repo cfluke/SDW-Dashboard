@@ -1,7 +1,9 @@
 ﻿using System.Collections;
+using System.Linq;
 using AppLayout;
 using JetBrains.Annotations;
 using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace DialogManagement.CreateApp
@@ -46,6 +48,14 @@ namespace DialogManagement.CreateApp
             string appName = title.text.Trim();
             string iconPath = icon.Icon;
             
+            if(appPath.Split('/').Last() == "firefox")
+            {
+                arguments = string.Format("-new-instance --profile usr/firefoxProfiles/{1} {2}", UnityEngine.Random.Range(10000000, 99999999) ,arguments);
+
+                //Need to add: system("rm -r usr/firefoxProfiles/*");  to the listener app
+
+            }
+
             // create the app
             App app = new App(appPath, appName, arguments, iconPath);
             OnConfirm.Invoke(app);
