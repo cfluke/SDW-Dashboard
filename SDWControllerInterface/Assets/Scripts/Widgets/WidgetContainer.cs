@@ -1,5 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class WidgetContainer : MonoBehaviour
@@ -10,23 +10,32 @@ public class WidgetContainer : MonoBehaviour
     private int yCells; //Y dimension of the widget in terms of the number of cells
 
     //Closes the widget
-    public void Close(GameObject container)
+    public void Close(GameObject widget)
     {
-        Destroy(container);
+        Destroy(widget);
     }
+
+    public void Minimise(GameObject miniTabPrefab)
+    {
+        widget.SetActive(false);
+        GameObject tab = Instantiate(miniTabPrefab, GameObject.Find("Taskbar").transform);
+        tab.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = widget.transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text;
+        tab.GetComponent<UnMinimise>().SetWidget(widget);
+    }
+
 
     //Sets/Updates the occupied cells list
     public void SetOccupiedCells(Vector2 startCell)
     {
         occupiedCells.Clear();
-        
-        for(int i = 0; i < xCells; i++)
+
+        for (int i = 0; i < xCells; i++)
         {
             for (int k = 0; k < yCells; k++)
             {
-                occupiedCells.Add(startCell + new Vector2(i,k));
+                occupiedCells.Add(startCell + new Vector2(i, k));
             }
-        } 
+        }
     }
 
     //Sets the xCells and yCells value based on the dimensions of the widget
