@@ -85,10 +85,12 @@ public sealed class TCPHandler {
 		string? clientID = null;
 		NetworkStream ns = client.GetStream();
 
-		Debug.Log("New client");
+		Logger.Instance.Log("New client");
 
+		Debug.Log("test1");
 		// Wait for the client to be fully connected
 		while (!client.Connected) { }
+		Debug.Log("test2");
 
 		// SendMessage is not used here, as it requires the client to have already been identified
 		// Request the client identifies itself
@@ -117,7 +119,7 @@ public sealed class TCPHandler {
 		}
 
 		// This is reached once the client disconnects
-		Debug.Log("Client disconnected");
+		Logger.Instance.Log("Client disconnected");
 
 		// Artificially creates the disconnect message
 		string disconnectMessage = JsonUtility.ToJson(new ClientToServerMessage {
@@ -163,7 +165,7 @@ public sealed class TCPHandler {
 
 		// If the client is not yet identified; prevent the message from firing
 		if (clientID == null) {
-			Debug.LogError("Recieved message from client that has not yet identified itself, ignoring message");
+			Logger.Instance.LogError("Recieved message from client that has not yet identified itself, ignoring message");
 			// TODO: Send message to client telling it the request failed due to lack of ID
 			return;
 		}
@@ -171,7 +173,7 @@ public sealed class TCPHandler {
 		// Create the message event, then fire the event
 		TCPMessageReceivedEventArgs e = new TCPMessageReceivedEventArgs(clientID, message);
 
-		Debug.Log("Message received\n\tType; " + e.message.MessageType + "\n\tContents; " + e.message.payload + "\n");
+		Logger.Instance.Log("Message received\n\tType; " + e.message.MessageType + "\n\tContents; " + e.message.payload + "\n");
 		MessageReceived?.Invoke(this, e);
 	}
 	#nullable disable

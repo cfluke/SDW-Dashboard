@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using DialogManagement;
 using FileExplorer;
 using SerializableData;
+using SSH;
 using UnityEngine;
 
 namespace DiscoveryWall
@@ -28,9 +29,22 @@ namespace DiscoveryWall
             if (!string.IsNullOrEmpty(path))
             {
                 _discoveryWall = FindObjectOfType<DiscoveryWall>();
+                _discoveryWall.Destroy(); // destroy the current config, if any
+                
                 DiscoveryWallConfigImporter sdwImporter = new DiscoveryWallConfigImporter(); 
                 DiscoveryWallSerializable discoveryWallData = sdwImporter.Import(path);
-                _discoveryWall.Clear();
+                
+                foreach (KeckDisplaySerializable keckDisplayData in discoveryWallData.keckDisplays)
+                {
+                    // SSH 
+                    //string ip = keckDisplayData.ip;
+                    string ip = "136.186.110.12";
+                    string username = "localuser";
+                    string password = "localuser";
+                    string path = "/mnt/nfs/home/localuser/SSALab/Listener/Stable/";
+                    SSHManager.Instance.LaunchClient(ip, username, password, path);
+                }
+                
                 _discoveryWall.Populate(discoveryWallData);
             }
         }

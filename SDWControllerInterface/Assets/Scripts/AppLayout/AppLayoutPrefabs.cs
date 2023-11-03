@@ -15,7 +15,7 @@ namespace AppLayout
             }
             catch (IndexOutOfRangeException e)
             {
-                Debug.LogError(e);
+                Logger.Instance.LogError(e.Message);
             }
             
             return null;

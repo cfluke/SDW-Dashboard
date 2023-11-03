@@ -43,6 +43,10 @@ public class Logger : MonoBehaviour
         }
     }
 
+    public void LogSuccess(string message)
+    {
+    }
+
     public void Log(string message) 
     {
         Debug.Log(message);
@@ -54,14 +58,14 @@ public class Logger : MonoBehaviour
         string tag = colorTag + dateTime + endTag;
         AddLog(tag + message);*/
 
-        string dateTime = GetDateTime();
+        //string dateTime = GetDateTime();
         //string formattedMessage = $"{dateTime} {message}";
-        string formattedMessage = $"[{dateTime}] {message}";
-
+        string formattedMessage = $"<color=\"white\">[Log]</color>: {message}";
         AddLog(formattedMessage);
+        Debug.Log(formattedMessage);
 
         // Save the log message to the log file.
-        SaveLogToFile(formattedMessage);
+        //SaveLogToFile(formattedMessage);
         
         OnLogReceived?.Invoke(formattedMessage);
     }
@@ -76,12 +80,12 @@ public class Logger : MonoBehaviour
 
         string dateTime = GetDateTime();
         //string formattedMessage = $"{dateTime} [Warning] {message}";
-        string formattedMessage = $"{dateTime} [Session { sessionIdentifier}] { message}";
+        string formattedMessage = $"{dateTime}<color=\"yellow\">[Warning]</color>: {message}";
 
         AddLog(formattedMessage);
 
         // Save the warning message to the log file.
-        SaveLogToFile(formattedMessage);
+        //SaveLogToFile(formattedMessage);
         
         OnWarningReceived?.Invoke(formattedMessage);
     }
@@ -96,12 +100,12 @@ public class Logger : MonoBehaviour
 
         string dateTime = GetDateTime();
         //string formattedMessage = $"{dateTime} [Error] {message}";
-        string formattedMessage = $"{dateTime} [Error] [Session {sessionIdentifier}] {message}";
+        string formattedMessage = $"{dateTime}<color=\"red\">[Error]</color>: {message}";
 
         AddLog(formattedMessage);
 
         // Save the error message to the log file.
-        SaveLogToFile(formattedMessage);
+        //SaveLogToFile(formattedMessage);
         
         OnErrorReceived?.Invoke(formattedMessage);
     }
@@ -113,15 +117,15 @@ public class Logger : MonoBehaviour
         logFileName = sessionIdentifier + ".log";
         
         // Update logFilePath with the correct path in Start()
-        logFilePath = Path.Combine(Application.persistentDataPath, "/Logs/");
+        //logFilePath = Path.Combine(Application.persistentDataPath, "/Logs/");
         
         //sessionIdentifier = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
         
         // Check if we need to remove the oldest session identifier(s) to maintain the maximum count.
-        CheckAndRemoveOldestSessions();
+        //CheckAndRemoveOldestSessions();
 
         // Load log entries from the log file
-        LoadLogFromFile();
+        //LoadLogFromFile();
         
     }
 
@@ -167,7 +171,7 @@ public class Logger : MonoBehaviour
         string formattedDateTime = now.ToString("dd/MM/yyyy HH:mm:ss");
 
         // Add the desired format
-        formattedDateTime = "[" + formattedDateTime + "]: ";
+        formattedDateTime = "<color=#D3D3D3>[" + formattedDateTime + "]</color>";
 
         return formattedDateTime;
     }

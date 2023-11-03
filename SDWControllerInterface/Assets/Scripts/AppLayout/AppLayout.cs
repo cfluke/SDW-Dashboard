@@ -54,7 +54,7 @@ namespace AppLayout
             AppButton appButton = _appButtons.FirstOrDefault(button => button.ID == buttonId);
             if (appButton == null)
             {
-                Debug.LogError("AppButton with ID: " + buttonId + " does not exist");
+                Logger.Instance.LogError("AppButton with ID: " + buttonId + " does not exist");
                 return;
             }
             

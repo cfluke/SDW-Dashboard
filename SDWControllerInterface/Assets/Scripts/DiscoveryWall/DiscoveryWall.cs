@@ -41,6 +41,14 @@ namespace DiscoveryWall
                 keckDisplay.Clear();
         }
 
+        public void Destroy()
+        {
+            foreach (KeckDisplay keckDisplay in _keckDisplays)
+                Destroy(keckDisplay.gameObject);
+
+            _keckDisplays.Clear();
+        }
+
         public void StartApps()
         {
             foreach (KeckDisplay keckDisplay in _keckDisplays)

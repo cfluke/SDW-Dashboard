@@ -58,7 +58,7 @@ namespace DiscoveryWall
         {
             if (tcpMessageReceivedEventArgs.message.MessageType == MessageTypes.Identify)
             {
-                Debug.Log(tcpMessageReceivedEventArgs.message.payload);
+                Logger.Instance.Log(tcpMessageReceivedEventArgs.message.payload);
                 IdentifyMessage identifyMessage = JsonUtility.FromJson<IdentifyMessage>(tcpMessageReceivedEventArgs.message.payload);
 
                 CreateKeckDisplay(identifyMessage);

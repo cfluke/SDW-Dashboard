@@ -3,8 +3,8 @@ using System.Linq;
 using AppLayout;
 using JetBrains.Annotations;
 using TMPro;
-using Unity.Mathematics;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace DialogManagement.CreateApp
 {
@@ -37,7 +37,7 @@ namespace DialogManagement.CreateApp
         {
             if (path.text.Length == 0)
             {
-                Debug.Log("Path needed");
+                Logger.Instance.LogError("Path needed");
                 StartCoroutine(FlashCompulsoryFields());
                 return;
             }
@@ -50,10 +50,11 @@ namespace DialogManagement.CreateApp
             
             if(appPath.Split('/').Last() == "firefox")
             {
-                arguments = string.Format("-new-instance --profile usr/firefoxProfiles/{1} {2}", UnityEngine.Random.Range(10000000, 99999999) ,arguments);
+                int random = Random.Range(10000000, 99999999);
+                arguments += " --new-instance -P " + random;
+                arguments = arguments.Trim();
 
                 //Need to add: system("rm -r usr/firefoxProfiles/*");  to the listener app
-
             }
 
             // create the app

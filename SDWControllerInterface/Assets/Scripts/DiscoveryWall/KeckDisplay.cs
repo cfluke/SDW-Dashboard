@@ -46,10 +46,10 @@ namespace DiscoveryWall
                     };
 
                     // send
-                    Debug.Log("Sending " + json + " to " + _id);
+                    Logger.Instance.Log("Sending " + json + " to " + _id);
                     if (!TCPHandler.SendMessage(_id, message))
                     {
-                        Debug.Log("Client doesn't exist!");
+                        Logger.Instance.LogWarning("Client doesn't exist!");
                     }
                 }
             }
@@ -65,10 +65,10 @@ namespace DiscoveryWall
             };
         
             // send
-            Debug.Log("Sending " + message.MessageType + " to " + _id);
+            Logger.Instance.Log("Sending " + message.MessageType + " to " + _id);
             if (!TCPHandler.SendMessage(_id, message))
             {
-                Debug.Log("Client doesn't exist!");
+                Logger.Instance.LogWarning("Client doesn't exist!");
             }
         }
 
