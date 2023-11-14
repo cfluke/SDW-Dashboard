@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using UnityEngine;
+using Logger = Logs.Logger;
 
 public sealed class TCPHandler {
 	private static TCPHandler instance;

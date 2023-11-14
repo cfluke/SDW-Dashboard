@@ -214,12 +214,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4512882253297640649}
-        m_TargetAssemblyTypeName: LayoutSelectorButton, Assembly-CSharp
+        m_TargetAssemblyTypeName: AppLayout.LayoutSelectorButton, Assembly-CSharp
         m_MethodName: OpenLayoutSelector
-        m_Mode: 2
+        m_Mode: 1
         m_Arguments:
-          m_ObjectArgument: {fileID: 8481646247522879913}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.RectTransform, UnityEngine
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -237,6 +237,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e536904afbc44418da16ad1852c68c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layoutSelectorPrefab: {fileID: 4310382147172066174, guid: 0e104bd057c820f4c9f904e9aa9da521, type: 3}
 --- !u!1001 &4311255481666432904
 PrefabInstance:
   m_ObjectHideFlags: 0

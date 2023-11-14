@@ -1,221 +1,122 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.IO;
-using System.Linq;
 
-public class Logger : MonoBehaviour
+namespace Logs
 {
-    // use these to make the logs a little more colourful and professional looking
-    private static Logger _instance;
-
-    private string logFileName; // Name of the log file
-    private string logFilePath; // Full path to the log file
-
-    private string sessionIdentifier; // Identifier for the current session.
-
-    private int maxSessionCount = 10; // Maximum number of log entries to keep.
-
-    private List<string> logEntries = new List<string>();
-
-    public event Action<string> OnLogReceived;
-    public event Action<string> OnWarningReceived;
-    public event Action<string> OnErrorReceived;
-        
-    // singleton
-    public static Logger Instance
+    public class Logger : MonoBehaviour
     {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = FindObjectOfType<Logger>();
+        private static Logger _instance;
+    
+        // callback functions for any class which wants to listen in on logs
+        public event Action<string> OnAnyLog;
+        public event Action<string> OnSuccess;
+        public event Action<string> OnLog;
+        public event Action<string> OnWarning;
+        public event Action<string> OnError;
 
+        public List<string> Logs { get; } = new();
+    
+        #region singleton
+    
+        public static Logger Instance
+        {
+            get
+            {
                 if (_instance == null)
                 {
-                    GameObject singletonObject = new GameObject("Logger");
-                    _instance = singletonObject.AddComponent<Logger>();
+                    _instance = FindObjectOfType<Logger>();
+
+                    if (_instance == null)
+                    {
+                        GameObject singletonObject = new GameObject("Logger");
+                        _instance = singletonObject.AddComponent<Logger>();
+                    }
                 }
+
+                return _instance;
             }
-
-            return _instance;
         }
-    }
-
-    public void LogSuccess(string message)
-    {
-    }
-
-    public void Log(string message) 
-    {
-        Debug.Log(message);
-
-        /*string colorTag = "<color=#" + _normalColour + ">";  //to HEX
-        string dateTime = GetDateTime();
-        string endTag = "</color>";
-
-        string tag = colorTag + dateTime + endTag;
-        AddLog(tag + message);*/
-
-        //string dateTime = GetDateTime();
-        //string formattedMessage = $"{dateTime} {message}";
-        string formattedMessage = $"<color=\"white\">[Log]</color>: {message}";
-        AddLog(formattedMessage);
-        Debug.Log(formattedMessage);
-
-        // Save the log message to the log file.
-        //SaveLogToFile(formattedMessage);
-        
-        OnLogReceived?.Invoke(formattedMessage);
-    }
-
-    public void LogWarning(string message) 
-    {
-        Debug.LogWarning(message);
-
-        /*string dateTime = GetDateTime();
-
-        AddLog(message);*/
-
-        string dateTime = GetDateTime();
-        //string formattedMessage = $"{dateTime} [Warning] {message}";
-        string formattedMessage = $"{dateTime}<color=\"yellow\">[Warning]</color>: {message}";
-
-        AddLog(formattedMessage);
-
-        // Save the warning message to the log file.
-        //SaveLogToFile(formattedMessage);
-        
-        OnWarningReceived?.Invoke(formattedMessage);
-    }
-
-    public void LogError(string message) 
-    {
-        Debug.LogError(message);
-
-        /*string dateTime = GetDateTime();
-
-        AddLog(message);*/
-
-        string dateTime = GetDateTime();
-        //string formattedMessage = $"{dateTime} [Error] {message}";
-        string formattedMessage = $"{dateTime}<color=\"red\">[Error]</color>: {message}";
-
-        AddLog(formattedMessage);
-
-        // Save the error message to the log file.
-        //SaveLogToFile(formattedMessage);
-        
-        OnErrorReceived?.Invoke(formattedMessage);
-    }
-//}
     
-    private void Start()
-    {
-        sessionIdentifier = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss");
-        logFileName = sessionIdentifier + ".log";
-        
-        // Update logFilePath with the correct path in Start()
-        //logFilePath = Path.Combine(Application.persistentDataPath, "/Logs/");
-        
-        //sessionIdentifier = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
-        
-        // Check if we need to remove the oldest session identifier(s) to maintain the maximum count.
-        //CheckAndRemoveOldestSessions();
+        #endregion
 
-        // Load log entries from the log file
-        //LoadLogFromFile();
-        
-    }
-
-    private List<string> GetLogFiles()
-    {
-        List<string> logFiles = new List<string>();
-
-        string[] files = Directory.GetFiles(logFilePath, "*.log");
-
-        foreach (string file in files)
+        private void Awake()
         {
-            logFiles.Add(file);
+            OnAnyLog += s => Logs.Add(s);
         }
 
-        return logFiles;
-    }
+        public void LogSuccess(string message)
+        {
+#if UNITY_EDITOR || UNITY_DEBUG
+            Debug.Log(message);
+#endif
+
+            // log in the format [DD/MM/YYYY HH:MM:SS][Log]: <message>
+            string formattedMessage = FormatMessage(Color.green, "Success", message);
+            // Debug.Log to check if this line is being executed
+            Debug.Log("LogSuccess invoked: " + formattedMessage);
+            OnSuccess?.Invoke(formattedMessage);
+            OnAnyLog?.Invoke(formattedMessage);
+        }
+
+        public void Log(string message) 
+        {
+#if UNITY_EDITOR || UNITY_DEBUG
+            Debug.Log(message);
+#endif
+
+            // log in the format [DD/MM/YYYY HH:MM:SS][Log]: <message>
+            string formattedMessage = FormatMessage(Color.white, "Log", message);
+            OnLog?.Invoke(formattedMessage);
+            OnAnyLog?.Invoke(formattedMessage);
+        }
+
+        public void LogWarning(string message) 
+        {
+#if UNITY_EDITOR || UNITY_DEBUG
+            Debug.LogWarning(message);
+#endif
+
+            // log in the format [DD/MM/YYYY HH:MM:SS][Warning]: <message>
+            string formattedMessage = FormatMessage(Color.yellow, "Warning", message);
+            OnWarning?.Invoke(formattedMessage);
+            OnAnyLog?.Invoke(formattedMessage);
+        }
+
+        public void LogError(string message) 
+        {
+#if UNITY_EDITOR || UNITY_DEBUG
+            Debug.LogError(message);
+#endif
+        
+            // log in the format [DD/MM/YYYY HH:MM:SS][Error]: <message>
+            string formattedMessage = FormatMessage(Color.red, "Error", message);
+            OnError?.Invoke(formattedMessage);
+            OnAnyLog?.Invoke(formattedMessage);
+        }
+
+        private string FormatMessage(Color colour, string logType, string message)
+        {
+            string dateTime = GetDateTime();
+            return $"{dateTime}<color=#{ColorToHex(colour)}>[{logType}]</color>: {message}";
+        }
     
-    private void CheckAndRemoveOldestSessions()
-    {
-        List<string> logFiles = GetLogFiles();
-        
-
-        if (logFiles.Count > maxSessionCount)
+        private string ColorToHex(Color color)
         {
-            // Sort files by creation time in ascending order (oldest first).
-            logFiles = logFiles.OrderBy(f => File.GetCreationTime(f)).ToList();
-
-            // Calculate the number of files to delete.
-            int filesToDelete = logFiles.Count - maxSessionCount;
-
-            for (int i = 0; i < filesToDelete; i++)
-            {
-                File.Delete(logFiles[i]);
-            }
+            Color32 color32 = color;
+            return color32.r.ToString("X2") + color32.g.ToString("X2") + color32.b.ToString("X2") + color32.a.ToString("X2");
         }
-    }
-    private static string GetDateTime()
-    {
-        // return date time in the format of "[dd/mm/yyyy]: "
-       
-        DateTime now = DateTime.Now;
-
-        string formattedDateTime = now.ToString("dd/MM/yyyy HH:mm:ss");
-
-        // Add the desired format
-        formattedDateTime = "<color=#D3D3D3>[" + formattedDateTime + "]</color>";
-
-        return formattedDateTime;
-    }
-
-    private void SaveLogToFile(string message)
-    {
-        try
+    
+        private static string GetDateTime()
         {
-            using (StreamWriter writer = File.AppendText(logFilePath))
-            {
-                // Wrap the log message in an HTML paragraph tag.
-                writer.WriteLine($"{message}");
-            }
-        }
-        catch (Exception e)
-        {
-            Debug.LogError("Error saving log message to file: " + e.Message);
-        }
-    }
+            // return date time in the format of "[dd/mm/yyyy]"
+            DateTime now = DateTime.Now;
+            string formattedDateTime = now.ToString("dd/MM/yy HH:mm:ss");
 
-    private void LoadLogFromFile()
-    {
-        if (File.Exists(logFilePath))
-        {
-            try
-            {
-                // Read log entries from the log file.
-                string[] lines = File.ReadAllLines(logFilePath);
-
-                // Load the most recent log entries up to the maximum count.
-                for (int i = 0; i < lines.Length; i++)
-                {
-                    logEntries.Add(lines[i]);
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.LogError("Error loading log file: " + e.Message);
-            }
+            // Add the desired format
+            formattedDateTime = "<color=#D3D3D3>[" + formattedDateTime + "]</color>";
+            return formattedDateTime;
         }
-    }
-    private void AddLog(string message)
-    {
-        logEntries.Add(message);
     }
 }
 

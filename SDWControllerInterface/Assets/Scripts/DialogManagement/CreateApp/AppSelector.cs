@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using FileExplorer;
+using DialogManagement.FileExplorer;
 using TMPro;
 using UnityEngine;
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using AppLayout;
 using SerializableData;
 using UnityEngine;
+using Logger = Logs.Logger;
 
 namespace DiscoveryWall
 {
@@ -21,6 +22,48 @@ namespace DiscoveryWall
             TCPHandler.MessageReceived += OnMessageReceived;
         }
 
+        private void OnMessageReceived(object sender, TCPMessageReceivedEventArgs tcpMessageReceivedEventArgs)
+        {
+            if (tcpMessageReceivedEventArgs.message.MessageType == MessageTypes.Identify)
+            {
+                Logger.Instance.Log(tcpMessageReceivedEventArgs.message.payload);
+                IdentifyMessage identifyMessage = JsonUtility.FromJson<IdentifyMessage>(tcpMessageReceivedEventArgs.message.payload);
+
+                CreateKeckDisplay(identifyMessage);
+            }
+        }
+
+        private void CreateKeckDisplay(IdentifyMessage identifyMessage)
+        {
+            // create MonitorData
+            List<MonitorData> monitors = new List<MonitorData>();
+            foreach (DisplayDetails displayDetails in identifyMessage.displayDetails)
+            {
+                monitors.Add(new MonitorData
+                {
+                    x = displayDetails.x,
+                    y = displayDetails.y,
+                    w = displayDetails.w,
+                    h = displayDetails.h,
+                    apps = Array.Empty<AppData>(),
+                    layout = AppLayouts.One.ToString()
+                });
+            }
+
+            // create KeckDisplayData and use it to 
+            KeckDisplayData keckDisplayData = new KeckDisplayData
+            {
+                id = identifyMessage.id,
+                ip = identifyMessage.ip,
+                monitors = monitors.ToArray(),
+                path = identifyMessage.path
+            };
+            
+            // create the KeckDisplay (need MainThreadDispatcher to execute on Unity main thread)
+            MainThreadDispatcher.Instance.Enqueue(() => { _discoveryWall.AddKeckDisplay(keckDisplayData); });
+        }
+        
+#if UNITY_EDITOR || UNITY_DEBUG
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.K))
@@ -53,39 +96,6 @@ namespace DiscoveryWall
                 CreateKeckDisplay(identifyMessage);
             }
         }
-
-        private void OnMessageReceived(object sender, TCPMessageReceivedEventArgs tcpMessageReceivedEventArgs)
-        {
-            if (tcpMessageReceivedEventArgs.message.MessageType == MessageTypes.Identify)
-            {
-                Logger.Instance.Log(tcpMessageReceivedEventArgs.message.payload);
-                IdentifyMessage identifyMessage = JsonUtility.FromJson<IdentifyMessage>(tcpMessageReceivedEventArgs.message.payload);
-
-                CreateKeckDisplay(identifyMessage);
-            }
-        }
-
-        private void CreateKeckDisplay(IdentifyMessage identifyMessage)
-        {
-            // get id, ip, and monitors to add to KeckDisplay
-            string id = identifyMessage.id;
-            string ip = identifyMessage.ip;
-            string path = identifyMessage.path;
-            List<MonitorSerializable> monitors = new List<MonitorSerializable>();
-            foreach (DisplayDetails displayDetails in identifyMessage.displayDetails)
-            {
-                int x = displayDetails.x;
-                int y = displayDetails.y;
-                int w = displayDetails.w;
-                int h = displayDetails.h;
-                string appLayout = AppLayouts.None.ToString();
-                AppSerializable[] apps = Array.Empty<AppSerializable>();
-                monitors.Add(new MonitorSerializable(x, y, w, h, appLayout, apps));
-            }
-
-            // create KeckDisplay data and use it to create a new KeckDisplay UI element in the SDW
-            KeckDisplaySerializable keckDisplayData = new KeckDisplaySerializable(id, ip, path, monitors);
-            MainThreadDispatcher.Instance.Enqueue(() => { _discoveryWall.AddKeckDisplay(keckDisplayData); });
-        }
+#endif
     }
 }

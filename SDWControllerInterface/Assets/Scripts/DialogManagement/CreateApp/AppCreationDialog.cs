@@ -4,6 +4,7 @@ using AppLayout;
 using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
+using Logger = Logs.Logger;
 using Random = UnityEngine.Random;
 
 namespace DialogManagement.CreateApp

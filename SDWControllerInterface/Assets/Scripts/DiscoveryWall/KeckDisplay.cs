@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using SerializableData;
 using TMPro;
 using UnityEngine;
+using Logger = Logs.Logger;
 
 namespace DiscoveryWall
 {
@@ -28,36 +30,33 @@ namespace DiscoveryWall
         {
             foreach (Monitor monitor in _monitors)
             {
-                AppSerializable[] apps = monitor.GetSerializableApps();
+                AppData[] apps = monitor.GetSerializableApps();
 
-                foreach (AppSerializable app in apps)
+                foreach (AppData app in apps)
                 {
                     if (app == null)
-                        continue;
-
-                    // serialize app object to json
+                        continue; // skip null AppData (since not every slot is guaranteed to be filled with an app)
+                    
+                    // serialize app object to json & create 'StartApp' TCP message
                     string json = JsonUtility.ToJson(app);
-
-                    // create TCP message
                     ServerToClientMessage message = new ServerToClientMessage
                     {
                         payload = json,
-                        MessageType = MessageTypes.StartApp // <- change to "AppStart" or something?
+                        MessageType = MessageTypes.StartApp
                     };
 
                     // send
-                    Logger.Instance.Log("Sending " + json + " to " + _id);
                     if (!TCPHandler.SendMessage(_id, message))
-                    {
-                        Logger.Instance.LogWarning("Client doesn't exist!");
-                    }
+                        Logger.Instance.LogError("StartApps: Client " + _id + " doesn't exist!");
+                    else 
+                        Logger.Instance.LogSuccess("StartApps: Sent " + json + " to " + _id);
                 }
             }
         }
 
         private void StopApps()
         {
-            // create TCP message
+            // create 'StopApps' TCP message
             ServerToClientMessage message = new ServerToClientMessage
             {
                 payload = "",
@@ -65,21 +64,20 @@ namespace DiscoveryWall
             };
         
             // send
-            Logger.Instance.Log("Sending " + message.MessageType + " to " + _id);
             if (!TCPHandler.SendMessage(_id, message))
-            {
-                Logger.Instance.LogWarning("Client doesn't exist!");
-            }
+                Logger.Instance.LogError("StopApps: Client " + _id + " doesn't exist!");
+            else 
+                Logger.Instance.LogSuccess("StopApps: Sent " + message.MessageType + " to " + _id);
         }
 
-        public void Init(KeckDisplaySerializable keckDisplayData)
+        public void Init(KeckDisplayData keckDisplayData)
         {
             _id = keckDisplayData.id;
             _ip = keckDisplayData.ip;
             _path = keckDisplayData.path;
             _monitors = new List<Monitor>();
 
-            foreach (MonitorSerializable m in keckDisplayData.monitors)
+            foreach (MonitorData m in keckDisplayData.monitors)
             {
                 GameObject monitorObject = Instantiate(monitorPrefab, transform);
                 Monitor monitor = monitorObject.GetComponent<Monitor>();
@@ -99,12 +97,15 @@ namespace DiscoveryWall
                 monitor.Clear();
         }
 
-        public KeckDisplaySerializable GetSerializable()
+        public KeckDisplayData GetSerializable()
         {
-            List<MonitorSerializable> m = new List<MonitorSerializable>();
-            foreach (Monitor monitor in _monitors)
-                m.Add(monitor.GetSerializable());
-            return new KeckDisplaySerializable(_id, _ip, _path, m);
+            return new KeckDisplayData
+            {
+                id = _id,
+                ip = _ip,
+                path = _path,
+                monitors = _monitors.Select(monitor => monitor.GetSerializable()).ToArray()
+            };
         }
     }
 }

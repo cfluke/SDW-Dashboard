@@ -43,7 +43,7 @@ namespace AppLayout
             Icon = icon;
         }
 
-        public App(AppSerializable app)
+        public App(AppData app)
         {
             Path = app.path;
             Name = app.name;

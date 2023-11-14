@@ -1,9 +1,10 @@
 using System.Threading.Tasks;
 using DialogManagement;
-using FileExplorer;
+using DialogManagement.FileExplorer;
 using SerializableData;
 using SSH;
 using UnityEngine;
+using Logger = Logs.Logger;
 
 namespace DiscoveryWall
 {
@@ -18,7 +19,10 @@ namespace DiscoveryWall
             
             _discoveryWall = FindObjectOfType<DiscoveryWall>();
             DiscoveryWallConfigExporter sdwExporter = new DiscoveryWallConfigExporter();
-            sdwExporter.Export(_discoveryWall.GetSerializable(), path);
+            if (sdwExporter.Export(_discoveryWall.GetSerializable(), path))
+                Logger.Instance.LogSuccess("ExportConfig: Successfully saved .sdw");
+            else
+                Logger.Instance.LogError("ExportConfig: Error saving .sdw");
         }
 
         public async void OpenDialog()
@@ -32,9 +36,9 @@ namespace DiscoveryWall
                 _discoveryWall.Destroy(); // destroy the current config, if any
                 
                 DiscoveryWallConfigImporter sdwImporter = new DiscoveryWallConfigImporter(); 
-                DiscoveryWallSerializable discoveryWallData = sdwImporter.Import(path);
+                DiscoveryWallData discoveryWallData = sdwImporter.Import(path);
                 
-                foreach (KeckDisplaySerializable keckDisplayData in discoveryWallData.keckDisplays)
+                /*foreach (KeckDisplaySerializable keckDisplayData in discoveryWallData.keckDisplays)
                 {
                     // SSH 
                     //string ip = keckDisplayData.ip;
@@ -43,9 +47,10 @@ namespace DiscoveryWall
                     string password = "localuser";
                     string path = "/mnt/nfs/home/localuser/SSALab/Listener/Stable/";
                     SSHManager.Instance.LaunchClient(ip, username, password, path);
-                }
+                }*/
                 
                 _discoveryWall.Populate(discoveryWallData);
+                Logger.Instance.LogSuccess("ImportConfig: Opened .sdw");
             }
         }
 

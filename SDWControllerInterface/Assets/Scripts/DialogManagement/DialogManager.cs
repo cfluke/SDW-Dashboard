@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using FileExplorer;
 using UnityEngine;
 
 namespace DialogManagement
@@ -11,7 +10,8 @@ namespace DialogManagement
         [SerializeField] private GameObject fileExplorerDialogPrefab;
         [SerializeField] private GameObject confirmDialogPrefab;
         
-        // singleton
+        #region singleton
+        
         private static DialogManager _instance;
 
         public static DialogManager Instance
@@ -28,6 +28,8 @@ namespace DialogManagement
             }
         }
         
+        #endregion
+        
         private void Awake()
         {
             // ensure there is only one instance
@@ -35,12 +37,17 @@ namespace DialogManagement
                 Destroy(gameObject);
         }
         
-        public async Task<T> Open<T, TParams>(GameObject dialogPrefab, TParams parameters) where TParams : class
+        /// <param name="dialogPrefab">the prefab of the Dialog that you want to open</param>
+        /// <param name="args">a custom class defined by you, for sending arguments through</param>
+        /// <typeparam name="T">the return type of the Dialog, i.e., a Confirm Dialog would use bool</typeparam>
+        /// <typeparam name="TParams">a custom class type defined by you, for sending arguments through</typeparam>
+        /// <returns>whatever your Dialog returns on Confirm/Cancel, same type as parameter 'T'</returns>
+        public async Task<T> Open<T, TParams>(GameObject dialogPrefab, TParams args) where TParams : class
         {
             // create and initialise dialog object
             GameObject dialogObject = Instantiate(dialogPrefab, dialogsRoot);
             Dialog<T, TParams> dialog = dialogObject.GetComponent<Dialog<T, TParams>>();
-            dialog.Init(parameters);
+            dialog.Init(args);
 
             // register OnConfirm behaviour
             TaskCompletionSource<T> tcs = new TaskCompletionSource<T>();

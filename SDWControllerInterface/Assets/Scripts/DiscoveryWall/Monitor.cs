@@ -12,12 +12,19 @@ namespace DiscoveryWall
         
         private AppLayout.AppLayout _layout;
 
-        private void OnTransformChildrenChanged()
+        private void Start()
         {
+            // cache the initial AppLayout child (which will be 1 (One))
             _layout = GetComponentInChildren<AppLayout.AppLayout>();
         }
 
-        public void Init(MonitorSerializable monitorData)
+        private void OnTransformChildrenChanged()
+        {
+            // cache the new AppLayout child whenever it is replaced
+            _layout = GetComponentInChildren<AppLayout.AppLayout>();
+        }
+
+        public void Init(MonitorData monitorData)
         {
             Dimensions = new Vector2Int(monitorData.w, monitorData.h);
             Offset = new Vector2Int(monitorData.x, monitorData.y);
@@ -28,11 +35,8 @@ namespace DiscoveryWall
                 if (appLayoutType == AppLayouts.None)
                     return; // no need to populate anything
                 
-                GameObject appLayoutPrefab = appLayouts.GetAppLayoutPrefab(appLayoutType);
-                GameObject appLayoutObject = Instantiate(appLayoutPrefab, transform);
-                appLayoutObject.transform.SetAsFirstSibling();
-
-                AppLayout.AppLayout layout = appLayoutObject.GetComponent<AppLayout.AppLayout>();
+                GameObject layoutPrefab = appLayouts.GetAppLayoutPrefab(appLayoutType);
+                AppLayout.AppLayout layout = SetLayout(layoutPrefab);
                 layout.Populate(monitorData.apps);
             }
         }
@@ -43,10 +47,23 @@ namespace DiscoveryWall
                 _layout.Clear();
         }
 
-        public MonitorSerializable GetSerializable()
+        public AppLayout.AppLayout SetLayout(GameObject layoutPrefab)
+        {
+            if (transform.childCount > 1)
+                Destroy(transform.GetChild(0).gameObject); // destroy old layout
+            
+            GameObject layout = Instantiate(layoutPrefab, transform);
+            layout.transform.SetAsFirstSibling();
+
+            AppLayout.AppLayout appLayout = layout.GetComponent<AppLayout.AppLayout>();
+            appLayout.Init();
+            return appLayout;
+        }
+
+        public MonitorData GetSerializable()
         {
             string layoutType = AppLayouts.None.ToString();
-            AppSerializable[] apps = Array.Empty<AppSerializable>();
+            AppData[] apps = Array.Empty<AppData>();
 
             if (_layout != null)
             {
@@ -54,12 +71,20 @@ namespace DiscoveryWall
                 apps = _layout.Apps;
             }
             
-            return new MonitorSerializable(Offset.x, Offset.y, Dimensions.x, Dimensions.y, layoutType, apps);
+            return new MonitorData
+            {
+                x = Offset.x,
+                y = Offset.y,
+                w = Dimensions.x,
+                h = Dimensions.y,
+                layout = layoutType,
+                apps = apps
+            };
         }
 
-        public AppSerializable[] GetSerializableApps()
+        public AppData[] GetSerializableApps()
         {
-            return _layout != null ? _layout.Apps : Array.Empty<AppSerializable>();
+            return _layout != null ? _layout.Apps : Array.Empty<AppData>();
         }
     }
 }

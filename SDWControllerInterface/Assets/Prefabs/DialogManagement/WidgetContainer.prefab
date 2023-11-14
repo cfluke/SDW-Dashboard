@@ -389,8 +389,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 323b16f29540e6146ac22c0ff32338e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  widgetContainer: {fileID: 1296804195314581852}
-  grid: {fileID: 0}
 --- !u!1 &1296804194990777983
 GameObject:
   m_ObjectHideFlags: 0
@@ -655,7 +653,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   widget: {fileID: 1296804195314581853}
-  occupiedCells: []
+  title: {fileID: 1740943889399827843}
 --- !u!114 &3431798289317523446
 MonoBehaviour:
   m_ObjectHideFlags: 0

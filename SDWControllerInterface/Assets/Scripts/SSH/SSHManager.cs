@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Diagnostics;
+using Logger = Logs.Logger;
 
 namespace SSH
 {

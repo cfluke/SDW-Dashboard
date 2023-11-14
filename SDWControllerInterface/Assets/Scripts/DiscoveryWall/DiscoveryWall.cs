@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using SerializableData;
 using UnityEngine;
+using Logger = Logs.Logger;
 
 namespace DiscoveryWall
 {
@@ -16,17 +17,18 @@ namespace DiscoveryWall
             _keckDisplays = new List<KeckDisplay>();
         }
 
-        public void Populate(DiscoveryWallSerializable discoveryWallData)
+        public void Populate(DiscoveryWallData discoveryWallData)
         {
             foreach (var keckDisplay in discoveryWallData.keckDisplays)
                 AddKeckDisplay(keckDisplay);
         }
 
-        public void AddKeckDisplay(KeckDisplaySerializable keckDisplayData)
+        public void AddKeckDisplay(KeckDisplayData keckDisplayData)
         {
             GameObject keckDisplayObject = Instantiate(keckDisplayPrefab, transform);
             KeckDisplay keckDisplay = keckDisplayObject.GetComponent<KeckDisplay>();
             keckDisplay.Init(keckDisplayData);
+            Logger.Instance.LogSuccess("New KeckDisplay: " + keckDisplayData.id);
             
             // remember KeckDisplay
             _keckDisplays.Add(keckDisplay);
@@ -61,12 +63,15 @@ namespace DiscoveryWall
                 keckDisplay.ToggleApps(false);
         }
 
-        public DiscoveryWallSerializable GetSerializable()
+        public DiscoveryWallData GetSerializable()
         {
-            List<KeckDisplaySerializable> k = new List<KeckDisplaySerializable>();
+            List<KeckDisplayData> k = new List<KeckDisplayData>();
             foreach (KeckDisplay keckDisplay in _keckDisplays)
                 k.Add(keckDisplay.GetSerializable());
-            return new DiscoveryWallSerializable(k);
+            return new DiscoveryWallData
+            {
+                keckDisplays = k.ToArray()
+            };
         }
     }
 }

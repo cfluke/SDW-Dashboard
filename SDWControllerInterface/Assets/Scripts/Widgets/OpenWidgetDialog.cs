@@ -2,23 +2,20 @@ using DialogManagement;
 using DialogManagement.Widget;
 using UnityEngine;
 
-public class OpenWidgetDialog : MonoBehaviour
+namespace Widgets
 {
-    [SerializeField] private GameObject widgetSelectionDialogPrefab;
-    private Object[] _widgetPrefabs;
-
-    public async void OpenDialog()
+    public class OpenWidgetDialog : MonoBehaviour
     {
-        _widgetPrefabs = Resources.LoadAll("WidgetPrefabs", typeof(GameObject));
-        WidgetSelectionDialogArgs args = new WidgetSelectionDialogArgs
+        [SerializeField] private GameObject widgetSelectionDialogPrefab;
+
+        public async void OpenDialog()
         {
-            WidgetPrefabs = _widgetPrefabs
-        };
-        if (GameObject.Find("WidgetSelectionDialog(Clone)") == null)
-        {
+            Object[] widgetPrefabs = Resources.LoadAll("WidgetPrefabs", typeof(GameObject));
+            WidgetSelectionDialogArgs args = new WidgetSelectionDialogArgs
+            {
+                WidgetPrefabs = widgetPrefabs
+            };
             await DialogManager.Instance.Open<object, WidgetSelectionDialogArgs>(widgetSelectionDialogPrefab, args);
         }
-            
     }
-
 }
