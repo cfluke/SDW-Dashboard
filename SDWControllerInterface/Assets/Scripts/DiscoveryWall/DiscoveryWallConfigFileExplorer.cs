@@ -4,41 +4,48 @@ using DialogManagement.FileExplorer;
 using SerializableData;
 using SSH;
 using UnityEngine;
+using Widgets;
 using Logger = Logs.Logger;
 
 namespace DiscoveryWall
 {
     public class DiscoveryWallConfigFileExplorer : MonoBehaviour
     {
-        private DiscoveryWall _discoveryWall;
-        private string path;
-
         public async void SaveDialog()
         {
-            path = await Open(FileExplorerDialogType.Save);
-            
-            _discoveryWall = FindObjectOfType<DiscoveryWall>();
+            string path = await Open(FileExplorerDialogType.Save);
+            if (string.IsNullOrEmpty(path))
+                return; // ignore if no path
+
+            // create serializable data class for export
+            DiscoveryWall discoveryWall = DiscoveryWall.Instance;
+            WidgetManager widgetManager = WidgetManager.Instance;
+            SDWConfigData sdwConfig = new SDWConfigData
+            {
+                discoveryWallData = discoveryWall.Serialize(),
+                widgetsData = widgetManager.Serialize()
+            };
+
+            // perform export
             DiscoveryWallConfigExporter sdwExporter = new DiscoveryWallConfigExporter();
-            if (sdwExporter.Export(_discoveryWall.GetSerializable(), path))
-                Logger.Instance.LogSuccess("ExportConfig: Successfully saved .sdw");
-            else
-                Logger.Instance.LogError("ExportConfig: Error saving .sdw");
+            sdwExporter.Export(sdwConfig, path);
+            
+            Logger.Instance.LogSuccess("ExportConfig: Successfully saved .sdw");
         }
 
         public async void OpenDialog()
         {
-            // get path
-            path = await Open(FileExplorerDialogType.Open);
+            string path = await Open(FileExplorerDialogType.Open);
+            if (string.IsNullOrEmpty(path))
+                return; // ignore if no path
 
-            if (!string.IsNullOrEmpty(path))
-            {
-                _discoveryWall = FindObjectOfType<DiscoveryWall>();
-                _discoveryWall.Destroy(); // destroy the current config, if any
-                
-                DiscoveryWallConfigImporter sdwImporter = new DiscoveryWallConfigImporter(); 
-                DiscoveryWallData discoveryWallData = sdwImporter.Import(path);
-                
-                /*foreach (KeckDisplaySerializable keckDisplayData in discoveryWallData.keckDisplays)
+            // perform import
+            DiscoveryWallConfigImporter sdwImporter = new DiscoveryWallConfigImporter();
+            SDWConfigData sdwConfig = sdwImporter.Import(path);
+            DiscoveryWallData discoveryWallData = sdwConfig.discoveryWallData;
+            WidgetsData widgetData = sdwConfig.widgetsData;
+
+            /*foreach (KeckDisplaySerializable keckDisplayData in discoveryWallData.keckDisplays)
                 {
                     // SSH 
                     //string ip = keckDisplayData.ip;
@@ -48,10 +55,18 @@ namespace DiscoveryWall
                     string path = "/mnt/nfs/home/localuser/SSALab/Listener/Stable/";
                     SSHManager.Instance.LaunchClient(ip, username, password, path);
                 }*/
-                
-                _discoveryWall.Populate(discoveryWallData);
+
+            // need to do instantiation and object stuff on the Main thread or TODO: get rid of this and listen for IDENTIFY connections
+            MainThreadDispatcher.Instance.Enqueue(() =>
+            {
+                // populate discovery wall and widgets with the imported data
+                DiscoveryWall discoveryWall = DiscoveryWall.Instance;
+                WidgetManager widgetManager = WidgetManager.Instance;
+                discoveryWall.Populate(discoveryWallData);
+                widgetManager.Populate(widgetData);
+
                 Logger.Instance.LogSuccess("ImportConfig: Opened .sdw");
-            }
+            });
         }
 
         private async Task<string> Open(FileExplorerDialogType dialogType)
@@ -62,7 +77,6 @@ namespace DiscoveryWall
                 Directory = "/",
                 Extension = "*.sdw"
             };
-            
             return await DialogManager.Instance.OpenFileDialog<string, FileExplorerArgs>(args);
         }
     }

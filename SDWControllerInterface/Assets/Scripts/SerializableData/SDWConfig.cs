@@ -3,12 +3,12 @@ using System;
 namespace SerializableData
 {
     [Serializable]
-    public class SDWConfigSerializable
+    public class SDWConfigData
     {
         // top half of the Dashboard
         public DiscoveryWallData discoveryWallData;
         
         // bottom half of the Dashboard
-        public WidgetsData widgetData;
+        public WidgetsData widgetsData;
     }
 }

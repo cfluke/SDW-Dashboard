@@ -90,12 +90,6 @@ namespace DiscoveryWall
             // update UI elements
             id.text = _id;
         }
-        
-        public void Clear()
-        {
-            foreach (Monitor monitor in _monitors)
-                monitor.Clear();
-        }
 
         public KeckDisplayData GetSerializable()
         {

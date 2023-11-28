@@ -1,3 +1,4 @@
+using System;
 using JetBrains.Annotations;
 using SerializableData;
 using UnityEngine;
@@ -5,6 +6,7 @@ using Utility;
 
 namespace AppLayout
 {
+    [Serializable]
     public class App
     {
         public string Path { get; }

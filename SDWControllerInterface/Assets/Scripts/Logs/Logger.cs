@@ -6,8 +6,6 @@ namespace Logs
 {
     public class Logger : MonoBehaviour
     {
-        private static Logger _instance;
-    
         // callback functions for any class which wants to listen in on logs
         public event Action<string> OnAnyLog;
         public event Action<string> OnSuccess;
@@ -19,6 +17,7 @@ namespace Logs
     
         #region singleton
     
+        private static Logger _instance;
         public static Logger Instance
         {
             get

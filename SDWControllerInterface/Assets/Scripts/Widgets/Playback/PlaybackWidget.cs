@@ -1,3 +1,4 @@
+using SerializableData;
 using UnityEngine;
 
 namespace Widgets.Playback
@@ -8,7 +9,7 @@ namespace Widgets.Playback
     
         void Start()
         {
-            _discoveryWall = FindObjectOfType<DiscoveryWall.DiscoveryWall>();
+            _discoveryWall = DiscoveryWall.DiscoveryWall.Instance;
         }
 
         public void StartApps()

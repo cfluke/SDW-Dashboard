@@ -1,8 +1,6 @@
-using System;
 using System.Linq;
 using DiscoveryWall;
 using SerializableData;
-using Unity.VisualScripting;
 using UnityEngine;
 using Logger = Logs.Logger;
 
@@ -46,8 +44,9 @@ namespace AppLayout
             for (int i = 0; i < apps.Length; i++)
             {
                 AppData app = apps[i];
-                if (app.path.Length > 0)
-                    AddApp(i, new App(app));
+                AppButton button = _appButtons[i];
+                if (app != null)
+                    button.AddApp(new App(app));
             }
         }
 
@@ -75,15 +74,18 @@ namespace AppLayout
                 icon = app.IconPath
             };
             Apps[buttonId] = newApp;
-            
-            // show the AppIcon in the button
-            appButton.AppButtonIcon.Show(app.Icon, string.IsNullOrEmpty(app.Name) ? app.Path : app.Name);
         }
-        
-        public void Clear()
+
+        public void RemoveApp(int buttonId)
         {
-            foreach (AppButton appButton in _appButtons)
-                appButton.AppButtonIcon.Hide();
+            AppButton appButton = _appButtons.FirstOrDefault(button => button.ID == buttonId);
+            if (appButton == null)
+            {
+                Logger.Instance.LogError("AppButton with ID: " + buttonId + " does not exist");
+                return;
+            }
+
+            Apps[buttonId] = null;
         }
 
         public AppLayouts GetLayoutType()

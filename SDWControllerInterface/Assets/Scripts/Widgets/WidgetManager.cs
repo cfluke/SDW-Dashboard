@@ -1,4 +1,7 @@
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using SerializableData;
 using UnityEngine;
 using Logger = Logs.Logger;
 
@@ -7,6 +10,7 @@ namespace Widgets
     public class WidgetManager : MonoBehaviour
     {
         [SerializeField] private GameObject widgetContainerObject;
+        [SerializeField] private Transform widgetsContent;
 
         #region singleton
         
@@ -35,12 +39,12 @@ namespace Widgets
 
         #endregion
         
-        public void AddNew(string widgetTitle)
+        public WidgetContainer Add(string widgetTitle)
         {
             string widgetPath = "WidgetPrefabs/" + widgetTitle;
             
             // Instantiate widget container
-            GameObject container = Instantiate(widgetContainerObject, GameObject.Find("Widgets").transform);
+            GameObject container = Instantiate(widgetContainerObject, widgetsContent);
             WidgetContainer widgetContainer = container.GetComponent<WidgetContainer>();
             
             // Instantiate widget inside the container
@@ -53,11 +57,33 @@ namespace Widgets
                 widgetContainer.CurrentCell = cell;
 
             Logger.Instance.Log("Created " + widgetTitle + " widget");
+            return widgetContainer;
         }
 
-        public void AddExisting(Widget widget)
+        public void Populate(WidgetsData widgetsData)
         {
-            string title = widget.Title;
+            Clear(); // clear old widgets
+            foreach (WidgetData widgetData in widgetsData.widgetData)
+            {
+                WidgetContainer widgetContainer = Add(widgetData.title); // create widget
+                widgetContainer.Widget.Deserialize(widgetData); // populate widget with persistent data
+            }
+        }
+
+        public WidgetsData Serialize()
+        {
+            WidgetContainer[] widgetContainers = widgetsContent.GetComponentsInChildren<WidgetContainer>();
+            return new WidgetsData
+            {
+                widgetData = widgetContainers.Select(container => container.Widget.Serialize()).ToArray() // serialize all widgets
+            };
+        }
+
+        public void Clear()
+        {
+            WidgetContainer[] widgetContainers = widgetsContent.GetComponentsInChildren<WidgetContainer>();
+            foreach (WidgetContainer container in widgetContainers)
+                Destroy(container.gameObject); // destroy widget/s
         }
 
         #region helper function/s
@@ -66,10 +92,9 @@ namespace Widgets
         private WidgetGridCell FindFirstEmptyCell(int width, int height)
         {
             // Get all occupied cells and put them in a list
-            Transform widgetContainerParent = GameObject.Find("Widgets").transform;
             List<Vector2Int> allOccupiedCells = new List<Vector2Int>();
-            for(int i = 0; i < widgetContainerParent.childCount - 1; i++)
-                allOccupiedCells.AddRange(widgetContainerParent.GetChild(i).GetComponent<WidgetContainer>().GetOccupiedCells());
+            for(int i = 0; i < widgetsContent.childCount - 1; i++)
+                allOccupiedCells.AddRange(widgetsContent.GetChild(i).GetComponent<WidgetContainer>().GetOccupiedCells());
 
             // Check each cell and if unoccupied, check all cells in the widgets dimensions. If all unoccupied, return first cell
             for (int i = 0; i < 17; i++)
@@ -88,13 +113,17 @@ namespace Widgets
                             }
                         }
                         if (isClear)
-                            return GameObject.Find(i + "," + k).GetComponent<WidgetGridCell>();
+                            return FindCell(i, k);
                     }
-                   
                 }
             }
 
             return null;
+        }
+
+        public WidgetGridCell FindCell(int x, int y)
+        {
+            return GameObject.Find(x + "," + y).GetComponent<WidgetGridCell>();
         }
         
         #endregion

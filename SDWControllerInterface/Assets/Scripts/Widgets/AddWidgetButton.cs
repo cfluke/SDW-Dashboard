@@ -7,7 +7,7 @@ namespace Widgets
     {
         public void AddWidget(TMP_Text title)
         {
-            WidgetManager.Instance.AddNew(title.text);
+            WidgetManager.Instance.Add(title.text);
         }
     }
 }

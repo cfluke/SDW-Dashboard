@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using AppLayout;
 using JetBrains.Annotations;
@@ -10,14 +11,17 @@ using Utility;
 namespace DraggableApps
 {
     [RequireComponent(typeof(Image))]
-    public class AppDraggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerExitHandler
+    public class AppDraggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
     {
         [SerializeField] private Image icon;
         [SerializeField] private TMP_Text title;
 
         private App _app;
-        private AppButton _prevAppButton;
-        private bool _isDragging;
+        private IAppDraggableTarget _prevTarget;
+        private float _originalSize = 1.0f;
+
+        public event Action<App> OnDragBegin;
+        public event Action<App> OnDragEnd;
 
         public void Init(App app)
         {
@@ -29,47 +33,61 @@ namespace DraggableApps
             title.text = string.IsNullOrEmpty(_app.Name) ? app.Path : app.Name;
         }
 
+        public void SetColor(Color color)
+        {
+            icon.color = color;
+            title.color = new Color(title.color.r, title.color.g, title.color.b, color.a);
+        }
+
+        public void SetSize(float size)
+        {
+            transform.localScale = new Vector3(size, size, size);
+            _originalSize = size;
+        }
+
         public void OnBeginDrag(PointerEventData eventData)
         {
-            _isDragging = true;
+            GameObject draggableAppsParent = GameObject.Find("DraggableApps");
+            RectTransform draggableAppsRect = draggableAppsParent.GetComponent<RectTransform>();
+            transform.SetParent(draggableAppsRect, true);
+            
+            OnDragBegin?.Invoke(_app);
         }
 
         public void OnDrag(PointerEventData eventData)
         {
             transform.position += (Vector3)eventData.delta;
             
-            AppButton appButton = RaycastForAppButton(eventData);
-
-            if (appButton != _prevAppButton)
+            IAppDraggableTarget target = RaycastForTarget(eventData);
+            if (target != _prevTarget)
             {
-                if (_prevAppButton != null)
-                    _prevAppButton.OnPointerExit(eventData);
-                
-                _prevAppButton = appButton;
-                
-                if (_prevAppButton != null)
-                    _prevAppButton.OnPointerEnter(eventData);
+                _prevTarget?.OnAppExit(eventData);
+                _prevTarget = target;
+                _prevTarget?.OnAppEnter(eventData);
             }
         }
         
         public void OnEndDrag(PointerEventData eventData)
         {
-            AppButton appButton = RaycastForAppButton(eventData);
-
-            if (appButton != null)
-                appButton.AddApp(_app);
+            OnDragEnd?.Invoke(_app);
+            
+            _prevTarget?.OnAppDrop(_app);
             
             Destroy(gameObject);
         }
 
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            transform.localScale = new Vector3(_originalSize, _originalSize, _originalSize) * 1.2f;
+        }
+
         public void OnPointerExit(PointerEventData eventData)
         {
-            if (!_isDragging)
-                Destroy(gameObject);
+            transform.localScale = new Vector3(_originalSize, _originalSize, _originalSize);
         }
 
         [CanBeNull]
-        private AppButton RaycastForAppButton(PointerEventData eventData)
+        private IAppDraggableTarget RaycastForTarget(PointerEventData eventData)
         {
             PointerEventData pointerEventData = new PointerEventData(EventSystem.current)
             {
@@ -82,11 +100,9 @@ namespace DraggableApps
             foreach (RaycastResult result in results)
             {
                 // check if the object we hit has an AppButton component
-                AppButton appButton = result.gameObject.GetComponent<AppButton>();
-                if (appButton != null)
-                {
-                    return appButton;
-                }
+                IAppDraggableTarget target = result.gameObject.GetComponent<IAppDraggableTarget>();
+                if (target != null)
+                    return target;
             }
 
             return null;

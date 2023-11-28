@@ -1,23 +1,21 @@
-using UnityEngine;
 using System.IO;
 using SerializableData;
+using Newtonsoft.Json;
 
 namespace DiscoveryWall
 {
     public class DiscoveryWallConfigExporter
     {
-        /// <summary>
-        /// opens a file picker window to allow the user to create/save a new/existing SDW configuration
-        /// </summary>
-        /// <returns>true if the export was successful, otherwise false</returns>
-        public bool Export(DiscoveryWallData data, string path)
+        public void Export(SDWConfigData data, string path)
         {
             // serialize config object to json
-            string json = JsonUtility.ToJson(data);
+            string json = JsonConvert.SerializeObject(data, Formatting.Indented, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.Auto
+            });
 
             // file IO to write to desired file
             File.WriteAllText(path, json);
-            return true;
         }
     }
 }

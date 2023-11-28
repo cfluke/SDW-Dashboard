@@ -40,12 +40,6 @@ namespace DiscoveryWall
                 layout.Populate(monitorData.apps);
             }
         }
-        
-        public void Clear()
-        {
-            if (_layout != null)
-                _layout.Clear();
-        }
 
         public AppLayout.AppLayout SetLayout(GameObject layoutPrefab)
         {

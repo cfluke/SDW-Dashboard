@@ -12,6 +12,33 @@ namespace DiscoveryWall
         [SerializeField] private GameObject keckDisplayPrefab;
         private List<KeckDisplay> _keckDisplays;
 
+        #region singleton
+        
+        private static DiscoveryWall _instance;
+        public static DiscoveryWall Instance
+        {
+            get
+            {
+                if (_instance == null)
+                    Logger.Instance.LogError("WidgetManager does not exist - it must.");
+
+                return _instance;
+            }
+        }
+        
+        private void Awake()
+        {
+            if (_instance == null)
+                _instance = this;
+            else
+            {
+                Logger.Instance.LogWarning("Duplicate WidgetManager found in the scene! Deleting the duplicate.");
+                Destroy(gameObject);
+            }
+        }
+
+        #endregion
+        
         private void Start()
         {
             _keckDisplays = new List<KeckDisplay>();
@@ -19,6 +46,7 @@ namespace DiscoveryWall
 
         public void Populate(DiscoveryWallData discoveryWallData)
         {
+            Destroy();
             foreach (var keckDisplay in discoveryWallData.keckDisplays)
                 AddKeckDisplay(keckDisplay);
         }
@@ -36,14 +64,8 @@ namespace DiscoveryWall
             // deactivate "Awaiting KeckDisplays..." placeholder
             discoveryWallPlaceholder.SetActive(false);
         }
-        
-        public void Clear()
-        {
-            foreach (KeckDisplay keckDisplay in _keckDisplays)
-                keckDisplay.Clear();
-        }
 
-        public void Destroy()
+        private void Destroy()
         {
             foreach (KeckDisplay keckDisplay in _keckDisplays)
                 Destroy(keckDisplay.gameObject);
@@ -63,7 +85,7 @@ namespace DiscoveryWall
                 keckDisplay.ToggleApps(false);
         }
 
-        public DiscoveryWallData GetSerializable()
+        public DiscoveryWallData Serialize()
         {
             List<KeckDisplayData> k = new List<KeckDisplayData>();
             foreach (KeckDisplay keckDisplay in _keckDisplays)

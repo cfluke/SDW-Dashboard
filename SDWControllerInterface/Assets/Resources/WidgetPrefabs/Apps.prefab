@@ -755,7 +755,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1350a9fc20d09944f994a72f3963484d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  widgetAppButtonPrefab: {fileID: 3710392631218351607, guid: d4871e6a7f17821439ddb0db4a9e1ea4, type: 3}
+  appDraggablePrefab: {fileID: 1769678416877530247, guid: 6f54c4cc7c8927e47bd702b29c6788f5, type: 3}
+  ghostAppDraggablePrefab: {fileID: 1769678416877530247, guid: 8dc3408f89cd6de45844280cd669c7e1, type: 3}
   content: {fileID: 8947220210119829403}
 --- !u!1 &9105211771080043455
 GameObject:

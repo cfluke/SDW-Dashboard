@@ -6,19 +6,19 @@ namespace Widgets.Note
 {
     public class NoteWidget : Widget
     {
-        [SerializeField] private TMP_Text notes;
+        [SerializeField] private TMP_InputField notes;
 
         public override WidgetData Serialize()
         {
-            NoteWidgetData noteData = new NoteWidgetData
+            return new NoteWidgetData(base.Serialize())
             {
                 note = notes.text
             };
-            return noteData;
         }
 
         public override void Deserialize(WidgetData widgetData)
         {
+            base.Deserialize(widgetData);
             notes.text = ((NoteWidgetData)widgetData).note;
         }
     }
