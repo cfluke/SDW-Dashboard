@@ -48,15 +48,6 @@ namespace DialogManagement.CreateApp
             string arguments = args.text.Trim();
             string appName = title.text.Trim();
             string iconPath = icon.Icon;
-            
-            if(appPath.Split('/').Last() == "firefox")
-            {
-                int random = Random.Range(10000000, 99999999);
-                arguments += " --new-instance -P " + random;
-                arguments = arguments.Trim();
-
-                //Need to add: system("rm -r usr/firefoxProfiles/*");  to the listener app
-            }
 
             // create the app
             App app = new App(appPath, appName, arguments, iconPath);

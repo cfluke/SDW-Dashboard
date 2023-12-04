@@ -45,6 +45,7 @@ namespace DialogManagement.FileExplorer
             _extension = parameters.Extension;
 
             navbar.Init(OnNavButton);
+            sidebar.Init(UpdateDirectory);
             viewport.Init(OnFolder, OnFile);
             footer.Init(parameters.DialogType, _extension, OnInputFieldUpdate);
 

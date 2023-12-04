@@ -1,6 +1,9 @@
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DialogManagement;
 using DialogManagement.FileExplorer;
+using JetBrains.Annotations;
 using SerializableData;
 using SSH;
 using UnityEngine;
@@ -9,8 +12,14 @@ using Logger = Logs.Logger;
 
 namespace DiscoveryWall
 {
-    public class DiscoveryWallConfigFileExplorer : MonoBehaviour
+    public class DiscoveryWallConfigManager : MonoBehaviour
     {
+        public Dictionary<string, KeckDisplayData> _keckDisplayData = new();
+        [CanBeNull] public KeckDisplayData GetKeckDisplayData(string keckDisplayId)
+        {
+            return _keckDisplayData.TryGetValue(keckDisplayId, out var data) ? data : null;
+        }
+
         public async void SaveDialog()
         {
             string path = await Open(FileExplorerDialogType.Save);
@@ -45,16 +54,18 @@ namespace DiscoveryWall
             DiscoveryWallData discoveryWallData = sdwConfig.discoveryWallData;
             WidgetsData widgetData = sdwConfig.widgetsData;
 
-            /*foreach (KeckDisplaySerializable keckDisplayData in discoveryWallData.keckDisplays)
-                {
+            foreach (KeckDisplayData keckDisplayData in discoveryWallData.keckDisplays)
+            {
                     // SSH 
-                    //string ip = keckDisplayData.ip;
-                    string ip = "136.186.110.12";
+                    string id = keckDisplayData.id;
+                    string ip = keckDisplayData.ip;
+                    Logger.Instance.Log(keckDisplayData.ip);
                     string username = "localuser";
                     string password = "localuser";
-                    string path = "/mnt/nfs/home/localuser/SSALab/Listener/Stable/";
-                    SSHManager.Instance.LaunchClient(ip, username, password, path);
-                }*/
+                    string listenerPath = "mnt/nfs/home/localuser/SSALab/Listener/Stable";
+                    SSHManager.Instance.LaunchClient(id, ip, username, password, listenerPath);
+                    _keckDisplayData.Add(id, keckDisplayData);
+            }
 
             // need to do instantiation and object stuff on the Main thread or TODO: get rid of this and listen for IDENTIFY connections
             MainThreadDispatcher.Instance.Enqueue(() =>
@@ -62,7 +73,7 @@ namespace DiscoveryWall
                 // populate discovery wall and widgets with the imported data
                 DiscoveryWall discoveryWall = DiscoveryWall.Instance;
                 WidgetManager widgetManager = WidgetManager.Instance;
-                discoveryWall.Populate(discoveryWallData);
+                discoveryWall.Destroy();
                 widgetManager.Populate(widgetData);
 
                 Logger.Instance.LogSuccess("ImportConfig: Opened .sdw");

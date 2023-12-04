@@ -36,5 +36,18 @@ namespace SerializableData
         [CanBeNull] public string name;
         [CanBeNull] public string args;
         [CanBeNull] public string icon;
+
+        public AppData() { }
+        public AppData(AppData app)
+        {
+            path = app.path;
+            x = app.x;
+            y = app.y;
+            w = app.w;
+            h = app.h;
+            name = app.name;
+            args = app.args;
+            icon = app.icon;
+        }
     }
 }

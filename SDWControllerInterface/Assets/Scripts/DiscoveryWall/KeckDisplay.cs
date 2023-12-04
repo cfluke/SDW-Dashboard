@@ -36,6 +36,15 @@ namespace DiscoveryWall
                 {
                     if (app == null)
                         continue; // skip null AppData (since not every slot is guaranteed to be filled with an app)
+
+                    // TODO: fix this and ensure that these extra firefox args are not visible to the user
+                    string originalArgs = app.args;
+                    if (app.path.Split('/').Last() == "firefox")
+                    {
+                        int random = Random.Range(10000000, 99999999);
+                        app.args += " --new-instance -P " + random;
+                        app.args = app.args.Trim();
+                    }
                     
                     // serialize app object to json & create 'StartApp' TCP message
                     string json = JsonUtility.ToJson(app);
@@ -44,6 +53,7 @@ namespace DiscoveryWall
                         payload = json,
                         MessageType = MessageTypes.StartApp
                     };
+                    app.args = originalArgs;
 
                     // send
                     if (!TCPHandler.SendMessage(_id, message))

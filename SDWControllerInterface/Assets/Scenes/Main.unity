@@ -6248,7 +6248,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   appDraggablePrefab: {fileID: 1769678416877530247, guid: 6f54c4cc7c8927e47bd702b29c6788f5, type: 3}
-  ghostDraggablePrefab: {fileID: 1769678416877530247, guid: 8dc3408f89cd6de45844280cd669c7e1, type: 3}
 --- !u!1 &2115058734
 GameObject:
   m_ObjectHideFlags: 0

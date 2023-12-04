@@ -44,13 +44,6 @@ namespace DiscoveryWall
             _keckDisplays = new List<KeckDisplay>();
         }
 
-        public void Populate(DiscoveryWallData discoveryWallData)
-        {
-            Destroy();
-            foreach (var keckDisplay in discoveryWallData.keckDisplays)
-                AddKeckDisplay(keckDisplay);
-        }
-
         public void AddKeckDisplay(KeckDisplayData keckDisplayData)
         {
             GameObject keckDisplayObject = Instantiate(keckDisplayPrefab, transform);
@@ -65,12 +58,21 @@ namespace DiscoveryWall
             discoveryWallPlaceholder.SetActive(false);
         }
 
-        private void Destroy()
+        public void Destroy()
         {
             foreach (KeckDisplay keckDisplay in _keckDisplays)
                 Destroy(keckDisplay.gameObject);
 
             _keckDisplays.Clear();
+        }
+
+        // TODO: finish this
+        private void SortKeckDisplays()
+        {
+            foreach (KeckDisplay keckDisplay in _keckDisplays)
+            {
+                
+            }
         }
 
         public void StartApps()

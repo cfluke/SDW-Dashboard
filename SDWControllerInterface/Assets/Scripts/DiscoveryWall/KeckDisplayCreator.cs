@@ -11,11 +11,13 @@ namespace DiscoveryWall
     public class KeckDisplayCreator : MonoBehaviour
     {
         private DiscoveryWall _discoveryWall;
+        private DiscoveryWallConfigManager _discoveryWallConfigManager;
         private int _keckDisplayCount = 1;
         
         private void Start()
         {
             _discoveryWall = GetComponent<DiscoveryWall>();
+            _discoveryWallConfigManager = FindObjectOfType<DiscoveryWallConfigManager>();
             
             // start TCPHandler (just in case) and register MessageReceived event listener
             TCPHandler.Instantiate();
@@ -29,11 +31,18 @@ namespace DiscoveryWall
                 Logger.Instance.Log(tcpMessageReceivedEventArgs.message.payload);
                 IdentifyMessage identifyMessage = JsonUtility.FromJson<IdentifyMessage>(tcpMessageReceivedEventArgs.message.payload);
 
-                CreateKeckDisplay(identifyMessage);
+                KeckDisplayData keckDisplayData = _discoveryWallConfigManager.GetKeckDisplayData(identifyMessage.id);
+                if (keckDisplayData == null)
+                    keckDisplayData = CreateKeckDisplayData(identifyMessage);
+                
+                MainThreadDispatcher.Instance.Enqueue(() =>
+                {
+                    _discoveryWall.AddKeckDisplay(keckDisplayData);
+                });
             }
         }
 
-        private void CreateKeckDisplay(IdentifyMessage identifyMessage)
+        private KeckDisplayData CreateKeckDisplayData(IdentifyMessage identifyMessage)
         {
             // create MonitorData
             List<MonitorData> monitors = new List<MonitorData>();
@@ -50,17 +59,13 @@ namespace DiscoveryWall
                 });
             }
 
-            // create KeckDisplayData and use it to 
-            KeckDisplayData keckDisplayData = new KeckDisplayData
+            return new KeckDisplayData
             {
                 id = identifyMessage.id,
                 ip = identifyMessage.ip,
                 monitors = monitors.ToArray(),
                 path = identifyMessage.path
             };
-            
-            // create the KeckDisplay (need MainThreadDispatcher to execute on Unity main thread)
-            MainThreadDispatcher.Instance.Enqueue(() => { _discoveryWall.AddKeckDisplay(keckDisplayData); });
         }
         
 #if UNITY_EDITOR || UNITY_DEBUG
@@ -93,7 +98,12 @@ namespace DiscoveryWall
                         monitor2
                     }
                 };
-                CreateKeckDisplay(identifyMessage);
+                
+                KeckDisplayData keckDisplayData = CreateKeckDisplayData(identifyMessage);
+                MainThreadDispatcher.Instance.Enqueue(() =>
+                {
+                    _discoveryWall.AddKeckDisplay(keckDisplayData);
+                });
             }
         }
 #endif
